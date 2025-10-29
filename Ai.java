@@ -15,20 +15,27 @@ public class Ai {
             return "";
         }
 
-        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
     }
 
     // Core of the AI
     public String aiAnswer(List<Message> history) throws Exception {
         StringBuilder messagesJson = new StringBuilder();
         for (Message m : history) {
-            messagesJson.append("{\"role\":\"").append(m.role).append("\",\"content\":\"").append(escapeJson(m.content)).append("\"},");
+            messagesJson.append("{\"role\":\"")
+                        .append(m.role).append("\",\"content\":\"")
+                        .append(escapeJson(m.content))
+                        .append("\"},");
         }
 
         if (messagesJson.length() > 0) {
             messagesJson.setLength(messagesJson.length() - 1);
         }
 
+        // Change temperature (closer to 1) kung gusto nyo na mas creative sagot jowa nyo
         String requestBody = String.format("""
             {
                 "model": "llama-3.1-8b-instant",
