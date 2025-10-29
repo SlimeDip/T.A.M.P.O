@@ -6,7 +6,6 @@ import java.util.Scanner;
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
 
 public class Main {
-    private static final String WIN_MARKER = "STATE:USER_ALREADY_WON";
 
     private static void clearConsole() {
         try {
@@ -56,8 +55,6 @@ public class Main {
 
     private static void startGame(Scanner input) {
         Ai ai = new Ai();
-        boolean hasWon = false;
-        boolean winMarkerAdded = false;
         int score = 0;
 
         try {
@@ -66,7 +63,6 @@ public class Main {
                 You are in a bad mood. Answer curtly and sarcastically.
                 Open the conversation with a short random scenario where you are upset with the user.
                 The user wins only when you genuinely forgive them; when that happens, include the exact phrase "I love you" once.
-                Check the conversation history for the system marker STATE:USER_ALREADY_WON. If it exists, the user already won, so respond warmly without repeating "I love you".
                 Keep every reply between 15 and 20 words.
                 """;
 
@@ -81,20 +77,17 @@ public class Main {
                 System.out.println();
 
                 // Check if u won
-                if (!hasWon && response.toLowerCase().contains("i love you")) {
-                    hasWon = true;
-                    if (!winMarkerAdded) {
-                        history.add(new Message("system", WIN_MARKER));
-                        winMarkerAdded = true;
-                    }
+                if (response.toLowerCase().contains("i love you")) {
                     System.out.println("Congratulations! You've won the lover's heart!");
                     System.out.println("Score: " + score);
-                    System.out.println("You can keep chatting or type 'exit' to head back to the menu.");
-                    System.out.println();
+                    System.out.println("\nPress Enter to return to the menu...");
+                    input.nextLine();
+                    clearConsole();
+                    return;
                 }
 
                 // For user input
-                System.out.print(hasWon ? "You (exit to menu): " : "You: ");
+                System.out.print("You: ");
                 String userMessage = input.nextLine();
                 userMessage = userMessage.trim();
                 score++;
