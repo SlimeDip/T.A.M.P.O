@@ -58,6 +58,7 @@ public class Main {
         Ai ai = new Ai();
         boolean hasWon = false;
         boolean winMarkerAdded = false;
+        int score = 0;
 
         try {
             String prompt = """
@@ -87,6 +88,7 @@ public class Main {
                         winMarkerAdded = true;
                     }
                     System.out.println("Congratulations! You've won the lover's heart!");
+                    System.out.println("Score: " + score);
                     System.out.println("You can keep chatting or type 'exit' to head back to the menu.");
                     System.out.println();
                 }
@@ -95,6 +97,7 @@ public class Main {
                 System.out.print(hasWon ? "You (exit to menu): " : "You: ");
                 String userMessage = input.nextLine();
                 userMessage = userMessage.trim();
+                score++;
                 if (userMessage.equalsIgnoreCase("exit")) {
                     clearConsole();
                     break;
