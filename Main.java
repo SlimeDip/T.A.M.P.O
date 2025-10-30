@@ -1,12 +1,21 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.time.Instant;
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
 
-public class Main {
+// CHANGELOG
+// - Added a score saving system
+// - Leaderboard is not really implemented yet (time and score lang iniistore, dapat ay user name and score lang)
+// - New User class to represent players (WIP)
 
+public class Main {
     private static void clearConsole() {
         try {
             final String os = System.getProperty("os.name");
@@ -26,8 +35,9 @@ public class Main {
         while (true) { 
             System.out.println("=== Suyo Simulator ===");
             System.out.println("1. Start game");
-            System.out.println("2. Tutorial");
-            System.out.println("3. exit");
+            System.out.println("2. Leaderboard");
+            System.out.println("3. Tutorial");
+            System.out.println("4. Exit");
             System.out.print("Enter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
@@ -36,6 +46,13 @@ public class Main {
             switch (choice) {
                 case "1" -> startGame(input);
                 case "2" -> {
+                    System.out.println("=== Leaderboard ===");
+                    System.out.println("Feature coming soon!");
+                    System.out.println("\nPress Enter to return to the menu...");
+                    input.nextLine();
+                    clearConsole();
+                }
+                case "3" -> {
                     System.out.println("=== Tutorial ===");
                     System.out.println("Make up with the AI lover by chatting with them. Make them say 'I love you' to win.");
                     System.out.println("Points will be awarded based on how creative your line is (WIP).");
@@ -44,7 +61,7 @@ public class Main {
                     input.nextLine();
                     clearConsole();
                 }
-                case "3" -> {
+                case "4" -> {
                     System.out.println("Exiting the game. Goodbye!");
                     System.exit(0);
                 }
@@ -78,6 +95,7 @@ public class Main {
 
                 // Check if u won
                 if (response.toLowerCase().contains("i love you")) {
+                    saveScore(score);
                     System.out.println("Congratulations! You've won the lover's heart!");
                     System.out.println("Score: " + score);
                     System.out.println("\nPress Enter to return to the menu...");
@@ -107,6 +125,45 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+    private static void saveScore(int score) {
+        Path p = Path.of("leaderboard.json");
+        String entry = String.format("{\"timestamp\":\"%s\",\"score\":%d}", Instant.now().toString(), score);
+
+        try {
+            // Creates json pag wala sa files
+            if (Files.exists(p)) {
+                String raw = Files.readString(p, StandardCharsets.UTF_8);
+                String trimmed = raw.trim();
+                if (trimmed.startsWith("[")) {
+                    if (trimmed.equals("[]")) {
+                        Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
+                    } else {
+                        int lastBracket = trimmed.lastIndexOf(']');
+                        if (lastBracket == -1) {
+                            Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
+                        } else {
+                            String prefix = trimmed.substring(0, lastBracket).trim();
+                            if (prefix.endsWith("[")) {
+                                Files.writeString(p, prefix + entry + "]", StandardCharsets.UTF_8);
+                            } else {
+                                Files.writeString(p, prefix + "," + entry + "]", StandardCharsets.UTF_8);
+                            }
+                        }
+                    }
+                } else if (trimmed.isEmpty()) {
+                    Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
+                } else {
+                    Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
+                }
+            } else {
+                Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to save score: " + e.getMessage());
+        }
+    }
+
 
     public static void main(String[] args) {
         clearConsole();
