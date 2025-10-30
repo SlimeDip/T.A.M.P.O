@@ -1,11 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.charset.StandardCharsets;
-import java.io.IOException;
-import java.time.Instant;
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
@@ -14,24 +9,18 @@ import java.time.Instant;
 // - Added a score saving system
 // - Leaderboard is not really implemented yet (time and score lang iniistore, dapat ay user name and score lang)
 // - New User class to represent players (WIP)
+// - New GameUtils class for utility functions
+
+// TO DO LIST
+// - Implement leaderboard viewing
+// - Add Inheritance, Polymorphism
+// - Inheritance: Create a difficulty class and extend it for different difficulty levels (EASY, MEDIUM, HARD) or personality types (Romantic, Sarcastic)
+// - Polymorphism: Male or Female nalang siguro
 
 public class Main {
-    private static void clearConsole() {
-        try {
-            final String os = System.getProperty("os.name");
-
-            if (os.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void game() {
+    private static void menu() {
         Scanner input = new Scanner(System.in);
+        
         while (true) { 
             System.out.println("=== Suyo Simulator ===");
             System.out.println("1. Start game");
@@ -41,7 +30,7 @@ public class Main {
             System.out.print("Enter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
-            clearConsole();
+            GameUtils.clearConsole();
 
             switch (choice) {
                 case "1" -> startGame(input);
@@ -50,7 +39,7 @@ public class Main {
                     System.out.println("Feature coming soon!");
                     System.out.println("\nPress Enter to return to the menu...");
                     input.nextLine();
-                    clearConsole();
+                    GameUtils.clearConsole();
                 }
                 case "3" -> {
                     System.out.println("=== Tutorial ===");
@@ -59,7 +48,7 @@ public class Main {
                     System.out.println("Type 'exit' to quit the game anytime.");
                     System.out.println("Press Enter to return to the menu...");
                     input.nextLine();
-                    clearConsole();
+                    GameUtils.clearConsole();
                 }
                 case "4" -> {
                     System.out.println("Exiting the game. Goodbye!");
@@ -95,12 +84,12 @@ public class Main {
 
                 // Check if u won
                 if (response.toLowerCase().contains("i love you")) {
-                    saveScore(score);
+                    GameUtils.saveScore(score);
                     System.out.println("Congratulations! You've won the lover's heart!");
                     System.out.println("Score: " + score);
                     System.out.println("\nPress Enter to return to the menu...");
                     input.nextLine();
-                    clearConsole();
+                    GameUtils.clearConsole();
                     return;
                 }
 
@@ -110,7 +99,7 @@ public class Main {
                 userMessage = userMessage.trim();
                 score++;
                 if (userMessage.equalsIgnoreCase("exit")) {
-                    clearConsole();
+                    GameUtils.clearConsole();
                     break;
                 }
 
@@ -126,47 +115,8 @@ public class Main {
         }
     }
 
-    private static void saveScore(int score) {
-        Path p = Path.of("leaderboard.json");
-        String entry = String.format("{\"timestamp\":\"%s\",\"score\":%d}", Instant.now().toString(), score);
-
-        try {
-            // Creates json pag wala sa files
-            if (Files.exists(p)) {
-                String raw = Files.readString(p, StandardCharsets.UTF_8);
-                String trimmed = raw.trim();
-                if (trimmed.startsWith("[")) {
-                    if (trimmed.equals("[]")) {
-                        Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                    } else {
-                        int lastBracket = trimmed.lastIndexOf(']');
-                        if (lastBracket == -1) {
-                            Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                        } else {
-                            String prefix = trimmed.substring(0, lastBracket).trim();
-                            if (prefix.endsWith("[")) {
-                                Files.writeString(p, prefix + entry + "]", StandardCharsets.UTF_8);
-                            } else {
-                                Files.writeString(p, prefix + "," + entry + "]", StandardCharsets.UTF_8);
-                            }
-                        }
-                    }
-                } else if (trimmed.isEmpty()) {
-                    Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                } else {
-                    Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                }
-            } else {
-                Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-            }
-        } catch (IOException e) {
-            System.err.println("Failed to save score: " + e.getMessage());
-        }
-    }
-
-
     public static void main(String[] args) {
-        clearConsole();
-        game();
+        GameUtils.clearConsole();
+        menu();
     }
 }
