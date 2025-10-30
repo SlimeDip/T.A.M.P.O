@@ -26,8 +26,8 @@ public class Ai {
         StringBuilder messagesJson = new StringBuilder();
         for (Message m : history) {
             messagesJson.append("{\"role\":\"")
-                        .append(m.role).append("\",\"content\":\"")
-                        .append(escapeJson(m.content))
+                        .append(m.getRole()).append("\",\"content\":\"")
+                        .append(escapeJson(m.getContent()))
                         .append("\"},");
         }
 

@@ -1,11 +1,13 @@
 public class User {
     private String name;
     private String gender;
+    private String attractedTo;
     private int score;
 
-    public User(String name, String gender) {
+    public User(String name, String gender, String attractedTo) {
         this.name = name;
         this.gender = gender;
+        this.attractedTo = attractedTo;
         this.score = 0;
     }
 
@@ -15,6 +17,10 @@ public class User {
 
     public String getGender() {
         return gender;
+    }
+
+    public String getAttractedTo() {
+        return attractedTo;
     }
 
     public int getScore() {
