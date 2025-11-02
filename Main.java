@@ -3,11 +3,6 @@ import java.util.List;
 import java.util.Scanner;
 
 import lover.*;
-import lover.Lover;
-import lover.Gender;
-import lover.Kuudere;
-import lover.Deredere;
-import lover.Tsundere;
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
@@ -155,7 +150,7 @@ public class Main {
         Gender gender = Gender.valueOf(input.nextLine().trim());
 
         System.out.print("Enter lover's attractedTo: ");
-        String attractedTo = input.nextLine().trim();
+        Gender attractedTo = Gender.valueOf(input.nextLine().trim());
 
         System.out.print("Select lover's personality type: ");
         System.out.print("1. Default");
