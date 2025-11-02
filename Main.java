@@ -5,47 +5,54 @@ import java.util.Scanner;
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
 
+// CHANGELOG
+// - Added a score saving system
+// - Leaderboard is not really implemented yet (time and score lang iniistore, dapat ay user name and score lang)
+// - New User class to represent players (WIP)
+// - New GameUtils class for utility functions
+
+// TO DO LIST
+// - Implement leaderboard viewing
+// - Add Inheritance, Polymorphism
+// - Inheritance: Create a difficulty class and extend it for different difficulty levels (EASY, MEDIUM, HARD) or personality types (Romantic, Sarcastic)
+// - Polymorphism: Male or Female nalang siguro
+
 public class Main {
-    private static final String WIN_MARKER = "STATE:USER_ALREADY_WON";
-
-    private static void clearConsole() {
-        try {
-            final String os = System.getProperty("os.name");
-
-            if (os.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            } else {
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
-            }
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void game() {
+    private static void menu() {
         Scanner input = new Scanner(System.in);
+        
         while (true) { 
             System.out.println("=== Suyo Simulator ===");
             System.out.println("1. Start game");
-            System.out.println("2. Tutorial");
-            System.out.println("3. exit");
+            System.out.println("2. Create Character");
+            System.out.println("3. Select Profile");
+            System.out.println("4. Leaderboard");
+            System.out.println("5. Tutorial");
+            System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
-            clearConsole();
+            GameUtils.clearConsole();
 
             switch (choice) {
                 case "1" -> startGame(input);
                 case "2" -> {
+                    System.out.println("=== Leaderboard ===");
+                    System.out.println("Feature coming soon!");
+                    System.out.println("\nPress Enter to return to the menu...");
+                    input.nextLine();
+                    GameUtils.clearConsole();
+                }
+                case "3" -> {
                     System.out.println("=== Tutorial ===");
                     System.out.println("Make up with the AI lover by chatting with them. Make them say 'I love you' to win.");
                     System.out.println("Points will be awarded based on how creative your line is (WIP).");
                     System.out.println("Type 'exit' to quit the game anytime.");
                     System.out.println("Press Enter to return to the menu...");
                     input.nextLine();
-                    clearConsole();
+                    GameUtils.clearConsole();
                 }
-                case "3" -> {
+                case "4" -> {
                     System.out.println("Exiting the game. Goodbye!");
                     System.exit(0);
                 }
@@ -56,8 +63,7 @@ public class Main {
 
     private static void startGame(Scanner input) {
         Ai ai = new Ai();
-        boolean hasWon = false;
-        boolean winMarkerAdded = false;
+        int score = 0;
 
         try {
             String prompt = """
@@ -65,7 +71,6 @@ public class Main {
                 You are in a bad mood. Answer curtly and sarcastically.
                 Open the conversation with a short random scenario where you are upset with the user.
                 The user wins only when you genuinely forgive them; when that happens, include the exact phrase "I love you" once.
-                Check the conversation history for the system marker STATE:USER_ALREADY_WON. If it exists, the user already won, so respond warmly without repeating "I love you".
                 Keep every reply between 15 and 20 words.
                 """;
 
@@ -80,23 +85,23 @@ public class Main {
                 System.out.println();
 
                 // Check if u won
-                if (!hasWon && response.toLowerCase().contains("i love you")) {
-                    hasWon = true;
-                    if (!winMarkerAdded) {
-                        history.add(new Message("system", WIN_MARKER));
-                        winMarkerAdded = true;
-                    }
+                if (response.toLowerCase().contains("i love you")) {
+                    GameUtils.saveScore(score);
                     System.out.println("Congratulations! You've won the lover's heart!");
-                    System.out.println("You can keep chatting or type 'exit' to head back to the menu.");
-                    System.out.println();
+                    System.out.println("Score: " + score);
+                    System.out.println("\nPress Enter to return to the menu...");
+                    input.nextLine();
+                    GameUtils.clearConsole();
+                    return;
                 }
 
                 // For user input
-                System.out.print(hasWon ? "You (exit to menu): " : "You: ");
+                System.out.print("You: ");
                 String userMessage = input.nextLine();
                 userMessage = userMessage.trim();
+                score++;
                 if (userMessage.equalsIgnoreCase("exit")) {
-                    clearConsole();
+                    GameUtils.clearConsole();
                     break;
                 }
 
@@ -112,8 +117,39 @@ public class Main {
         }
     }
 
+    private static void characterCreation() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("=== Character Creation ===");
+        System.out.print("Enter your name: ");
+        String name = input.nextLine().trim();
+
+        System.out.print("Enter your gender (Male/Female): ");
+        Gender gender = Gender.valueOf(input.nextLine().trim());
+
+        System.out.print("Enter your what gender are you attracted to? (Male/Female): ");
+        String attractedTo = input.nextLine().trim();
+
+        User user = new User(name, gender, attractedTo);
+    }
+
+    private static void loverCreation() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("=== Lover Creation ===");
+        System.out.print("Enter lover's name: ");
+        String name = input.nextLine().trim();
+
+        System.out.print("Enter lover's gender (Male/Female): ");
+        Gender gender = Gender.valueOf(input.nextLine().trim());
+
+        System.out.print("Enter lover's attractedTo: ");
+        String attractedTo = input.nextLine().trim();
+
+        User lover = new User(name, gender, attractedTo);
+    }
+
     public static void main(String[] args) {
-        clearConsole();
-        game();
+        GameUtils.clearConsole();
+        characterCreation();
+        menu();
     }
 }
