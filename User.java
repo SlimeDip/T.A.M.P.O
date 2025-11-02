@@ -1,10 +1,14 @@
+enum Gender {
+    Male, Female;
+}
+
 public class User {
     private String name;
-    private String gender;
+    private Gender gender;
     private String attractedTo;
     private int score;
 
-    public User(String name, String gender, String attractedTo) {
+    public User(String name, Gender gender, String attractedTo) {
         this.name = name;
         this.gender = gender;
         this.attractedTo = attractedTo;
@@ -15,7 +19,7 @@ public class User {
         return name;
     }
 
-    public String getGender() {
+    public Gender getGender() {
         return gender;
     }
 
