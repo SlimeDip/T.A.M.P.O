@@ -2,6 +2,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import lover.*;
+import lover.Lover;
+import lover.Gender;
+import lover.Kuudere;
+import lover.Deredere;
+import lover.Tsundere;
+
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
 
@@ -12,15 +19,14 @@ import java.util.Scanner;
 // - New GameUtils class for utility functions
 
 // TO DO LIST
+// - Fix girlfriend and user creation then commit na sa main branch
 // - Implement leaderboard viewing
 // - Add Inheritance, Polymorphism
 // - Inheritance: Create a difficulty class and extend it for different difficulty levels (EASY, MEDIUM, HARD) or personality types (Romantic, Sarcastic)
 // - Polymorphism: Male or Female nalang siguro
 
 public class Main {
-    private static void menu() {
-        Scanner input = new Scanner(System.in);
-        
+    private static void menu(Scanner input) {
         while (true) { 
             System.out.println("=== Suyo Simulator ===");
             System.out.println("1. Start game");
@@ -35,15 +41,23 @@ public class Main {
             GameUtils.clearConsole();
 
             switch (choice) {
-                case "1" -> startGame(input);
-                case "2" -> {
+                case "1":
+                    startGame(input);
+                    break;
+                case "2":
+                    characterCreation(input);
+                    break;
+                case "3":
+                    loverCreation(input);
+                    break;
+                case "4":
                     System.out.println("=== Leaderboard ===");
                     System.out.println("Feature coming soon!");
                     System.out.println("\nPress Enter to return to the menu...");
                     input.nextLine();
                     GameUtils.clearConsole();
-                }
-                case "3" -> {
+                    break;
+                case "5":
                     System.out.println("=== Tutorial ===");
                     System.out.println("Make up with the AI lover by chatting with them. Make them say 'I love you' to win.");
                     System.out.println("Points will be awarded based on how creative your line is (WIP).");
@@ -51,12 +65,13 @@ public class Main {
                     System.out.println("Press Enter to return to the menu...");
                     input.nextLine();
                     GameUtils.clearConsole();
-                }
-                case "4" -> {
+                    break;
+                case "6":
                     System.out.println("Exiting the game. Goodbye!");
                     System.exit(0);
-                }
-                default -> System.out.println("Invalid choice. Please try again.");
+                    break;
+                default:
+                    GameUtils.clearConsole();
             }
         }
     }
@@ -117,8 +132,7 @@ public class Main {
         }
     }
 
-    private static void characterCreation() {
-        Scanner input = new Scanner(System.in);
+    private static void characterCreation(Scanner input) {
         System.out.println("=== Character Creation ===");
         System.out.print("Enter your name: ");
         String name = input.nextLine().trim();
@@ -127,13 +141,12 @@ public class Main {
         Gender gender = Gender.valueOf(input.nextLine().trim());
 
         System.out.print("Enter your what gender are you attracted to? (Male/Female): ");
-        String attractedTo = input.nextLine().trim();
+        Gender attractedTo = Gender.valueOf(input.nextLine().trim());
 
         User user = new User(name, gender, attractedTo);
     }
 
-    private static void loverCreation() {
-        Scanner input = new Scanner(System.in);
+    private static void loverCreation(Scanner input) {
         System.out.println("=== Lover Creation ===");
         System.out.print("Enter lover's name: ");
         String name = input.nextLine().trim();
@@ -144,12 +157,51 @@ public class Main {
         System.out.print("Enter lover's attractedTo: ");
         String attractedTo = input.nextLine().trim();
 
-        User lover = new User(name, gender, attractedTo);
+        System.out.print("Select lover's personality type: ");
+        System.out.print("1. Default");
+        System.out.print("2. Hostile and cold (Tsundere) ");
+        System.out.print("3. Sweet and caring (Deredere) ");
+        System.out.print("4. Emotionless and aloof (Kuudere) ");
+        System.out.print("Enter your choice: ");
+        int personalityChoice = 1;
+
+        try {
+            personalityChoice = input.nextInt();
+        } catch (Exception e) {
+            System.out.print("Invalid input. Defaulting to 1: ");
+            personalityChoice = 1;
+        }
+
+        Lover lover;
+        switch (personalityChoice) {
+            case 1:
+                lover = new Lover(name, gender, attractedTo);
+                break;
+            case 2:
+                lover = new Tsundere(name, gender, attractedTo);
+                break;
+            case 3:
+                lover = new Deredere(name, gender, attractedTo);
+                break;
+            case 4:
+                lover = new Kuudere(name, gender, attractedTo);
+                break;
+            default:
+                System.out.println("Invalid choice. Choosing Default personality.");
+                lover = new Lover(name, gender, attractedTo);
+        }
+
+        System.out.println("Lover created: " + lover.getName() + " (" + lover.getPrompt() + ")");
+        System.out.println("Press Enter to return to menu...");
+        input.nextLine();
+        GameUtils.clearConsole();
+
     }
 
     public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
         GameUtils.clearConsole();
-        characterCreation();
-        menu();
+        characterCreation(input);
+        menu(input);
     }
 }
