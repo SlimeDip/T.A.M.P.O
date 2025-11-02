@@ -24,9 +24,11 @@ public class Main {
         while (true) { 
             System.out.println("=== Suyo Simulator ===");
             System.out.println("1. Start game");
-            System.out.println("2. Leaderboard");
-            System.out.println("3. Tutorial");
-            System.out.println("4. Exit");
+            System.out.println("2. Create Character");
+            System.out.println("3. Select Profile");
+            System.out.println("4. Leaderboard");
+            System.out.println("5. Tutorial");
+            System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
@@ -115,8 +117,39 @@ public class Main {
         }
     }
 
+    private static void characterCreation() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("=== Character Creation ===");
+        System.out.print("Enter your name: ");
+        String name = input.nextLine().trim();
+
+        System.out.print("Enter your gender (Male/Female): ");
+        Gender gender = Gender.valueOf(input.nextLine().trim());
+
+        System.out.print("Enter your what gender are you attracted to? (Male/Female): ");
+        String attractedTo = input.nextLine().trim();
+
+        User user = new User(name, gender, attractedTo);
+    }
+
+    private static void loverCreation() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("=== Lover Creation ===");
+        System.out.print("Enter lover's name: ");
+        String name = input.nextLine().trim();
+
+        System.out.print("Enter lover's gender (Male/Female): ");
+        Gender gender = Gender.valueOf(input.nextLine().trim());
+
+        System.out.print("Enter lover's attractedTo: ");
+        String attractedTo = input.nextLine().trim();
+
+        User lover = new User(name, gender, attractedTo);
+    }
+
     public static void main(String[] args) {
         GameUtils.clearConsole();
+        characterCreation();
         menu();
     }
 }
