@@ -1,14 +1,12 @@
-enum Gender {
-    Male, Female;
-}
+import lover.Gender;
 
 public class User {
     private String name;
     private Gender gender;
-    private String attractedTo;
+    private Gender attractedTo;
     private int score;
 
-    public User(String name, Gender gender, String attractedTo) {
+    public User(String name, Gender gender, Gender attractedTo) {
         this.name = name;
         this.gender = gender;
         this.attractedTo = attractedTo;
@@ -23,7 +21,7 @@ public class User {
         return gender;
     }
 
-    public String getAttractedTo() {
+    public Gender getAttractedTo() {
         return attractedTo;
     }
 
