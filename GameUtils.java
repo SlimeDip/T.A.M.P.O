@@ -136,27 +136,21 @@ public class GameUtils {
         public int getScore() { return score; }
     }
 
-    // username|gender|attractedTo|loverClass|loverName|loverGender|loverAttractedTo|score
+    // username|gender|attractedTo|loverClass|loverName|loverGender|loverAttractedTo
     public static void saveProfiles(List<User> profiles) {
         Path p = Path.of("profiles.txt");
         List<String> lines = new ArrayList<>();
         for (User u : profiles) {
-            // assume profile fields are present (profiles are always created via the game flow)
             String safeName = u.getName().replaceAll("[\r\n|]", " ");
             String gender = u.getGender().toString();
             String attracted = u.getAttractedTo().toString();
             Lover lover = u.getLover();
-            String loverClass = "";
-            String loverName = "";
-            String loverGender = "";
-            String loverAttracted = "";
-            if (lover != null) {
-                loverClass = lover.getClass().getSimpleName();
-                loverName = lover.getName().replaceAll("[\r\n|]", " ");
-                loverGender = lover.getGender().toString();
-                loverAttracted = lover.getAttractedTo().toString();
-            }
-            String line = String.join("|", safeName, gender, attracted, loverClass, loverName, loverGender, loverAttracted, Integer.toString(u.getScore()));
+            String loverClass = lover.getClass().getSimpleName();
+            String loverName = lover.getName().replaceAll("[\r\n|]", " ");
+            String loverGender = lover.getGender().toString();
+            String loverAttracted = lover.getAttractedTo().toString();
+            
+            String line = String.join("|", safeName, gender, attracted, loverClass, loverName, loverGender, loverAttracted);
             lines.add(line);
         }
 
@@ -179,21 +173,18 @@ public class GameUtils {
                 String trimmed = line.trim();
                 if (trimmed.isEmpty()) continue;
                 String[] parts = trimmed.split("\\|", -1);
-                // expect at least 8 parts
-                if (parts.length < 8) continue;
+                
+                if (parts.length < 7) continue;
                 String name = parts[0].trim();
-                // game guarantees these strings are present
+                
                 Gender g = parseGenderString(parts[1].trim());
                 Gender attracted = parseGenderString(parts[2].trim());
                 String loverClass = parts[3].trim();
                 String loverName = parts[4].trim();
                 Gender loverGender = parseGenderString(parts[5].trim());
                 Gender loverAttracted = parseGenderString(parts[6].trim());
-                int score = 0;
-                try { score = Integer.parseInt(parts[7].trim()); } catch (NumberFormatException ignored) {}
 
                 User u = new User(name, g, attracted);
-                u.setScore(score);
 
                 Lover lover = null;
                 if (!loverClass.isEmpty()) {
@@ -210,6 +201,9 @@ public class GameUtils {
                         case "Hot":
                             lover = new Hot(loverName, loverGender, loverAttracted);
                             break;
+                        case "Chuunibyou":
+                            lover = new Chuunibyou(loverName, loverGender, loverAttracted);
+                            break;  
                         default:
                             // unknown class - skip creating lover
                     }
@@ -226,11 +220,9 @@ public class GameUtils {
     }
 
     private static Gender parseGenderString(String s) {
-        // input expected to be non-empty and valid (created by game flow).
         String n = s.trim().toLowerCase();
         if (n.equals("m") || n.equals("male")) return Gender.Male;
         if (n.equals("f") || n.equals("female")) return Gender.Female;
-        // try exact enum name (case sensitive), fall back to Male if unknown
         try { return Gender.valueOf(s); } catch (Exception ex) { return Gender.Male; }
     }
 }

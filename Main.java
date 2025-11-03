@@ -11,6 +11,10 @@ import lover.*;
 // GameUtils -> Utility class for common functions like clearing console and saving scores
 // Flex ko lang pero I debugged 70 bugs while making this, napaka ez
 
+// When adding new Lover personalities, create a new class in lover/ extending Lover and implement getPrompt()
+// Then, add a case in loverCreation() switch statement to create an instance of the new
+// Also edit loadProfiles() and saveProfiles() in GameUtils.java to support the new Lover class
+
 
 // CHANGELOG
 // - Added a score saving system
@@ -161,6 +165,7 @@ public class Main {
         System.out.println("2. Hostile and cold (Tsundere)");
         System.out.println("3. Sweet and caring (Deredere)");
         System.out.println("4. Emotionless and aloof (Kuudere)");
+        System.out.println("5. Delusional and dramatic (Chuunibyou)");
         System.out.print("Enter your choice: ");
         int personalityChoice = 1;
         String personalityType = "Default";
@@ -177,6 +182,7 @@ public class Main {
         switch (personalityChoice) {
             case 1:
                 lover = new Hot(name, gender, attractedTo);
+                personalityType = "Hot";
                 break;
             case 2:
                 lover = new Tsundere(name, gender, attractedTo);
@@ -189,6 +195,10 @@ public class Main {
             case 4:
                 lover = new Kuudere(name, gender, attractedTo);
                 personalityType = "Kuudere";
+                break;
+            case 5:
+                lover = new Chuunibyou(name, gender, attractedTo);
+                personalityType = "Chuunibyou";
                 break;
             default:
                 System.out.println("Invalid choice. Choosing Default personality.");
