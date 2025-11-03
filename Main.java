@@ -41,7 +41,7 @@ public class Main {
             System.out.println("3. Select Profile");
             System.out.println("4. Leaderboard");
             System.out.println("5. Tutorial");
-            System.out.println("6. Exit");
+            System.out.println("6. Save and Exit");
             System.out.print("Enter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
@@ -58,8 +58,8 @@ public class Main {
                     viewProfiles(input);
                     break;
                 case "4":
-                    // viewLeaderboard(input);
-                    // implement nyo to -dip
+                    viewLeaderboard(input);
+                    break;
                 case "5":
                     System.out.println("=== Tutorial ===");
                     System.out.println("Make up with the AI lover by chatting with them. Make them say 'I love you' to win.");
@@ -72,6 +72,7 @@ public class Main {
                     break;
                 case "6":
                     System.out.println("Exiting the game. Goodbye!");
+                    GameUtils.saveProfiles(profiles);
                     System.exit(0);
                     break;
                 default:
@@ -89,7 +90,6 @@ public class Main {
 
             List<Message> history = new ArrayList<>();
             history.add(new Message("system", prompt));
-            System.err.println(prompt);
 
             while (true) {
                 // For lover AI
@@ -157,7 +157,7 @@ public class Main {
         Gender attractedTo = user.getGender();
 
         System.out.println("\nSelect lover's personality type:");
-        System.out.println("1. Default");
+        System.out.println("1. Hot and passionate (Default)");
         System.out.println("2. Hostile and cold (Tsundere)");
         System.out.println("3. Sweet and caring (Deredere)");
         System.out.println("4. Emotionless and aloof (Kuudere)");
@@ -198,6 +198,8 @@ public class Main {
         user.setLover(lover);
         profiles.add(user);
         currentUser = user;
+        
+        GameUtils.saveProfiles(profiles);
 
         System.out.println("\nLover created: " + name + " (" + gender + ", attracted to " + attractedTo + ")");
         System.out.println("Personality type: " + personalityType);
@@ -230,13 +232,13 @@ public class Main {
 
     private static void viewLeaderboard(Scanner input) {
         System.out.println("=== Leaderboard ===");
-        List<Integer> scores = GameUtils.loadScores();
-        if (scores.isEmpty()) {
-            System.out.println("No scores recorded yet.");
+        List<GameUtils.ScoreEntry> entries = GameUtils.loadLeaderboard();
+        if (entries.isEmpty()) {
+            System.out.println("No scores yet.");
         } else {
             int rank = 1;
-            for (int score : scores) {
-                System.out.println(rank + ". Score: " + score);
+            for (GameUtils.ScoreEntry e : entries) {
+                System.out.println(rank + ". " + e.getUsername() + " - " + e.getScore());
                 rank++;
             }
         }
@@ -248,7 +250,15 @@ public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         GameUtils.clearConsole();
-        characterCreation(input);
+        
+        List<User> loaded = GameUtils.loadProfiles();
+        if (!loaded.isEmpty()) {
+            profiles.addAll(loaded);
+            currentUser = profiles.get(0);
+        } else {
+            characterCreation(input);
+        }
+
         menu(input);
     }
 }
