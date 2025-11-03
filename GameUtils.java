@@ -2,44 +2,22 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
-
 import lover.Gender;
 
 public class GameUtils {
-    public static void saveScore(int score) {
-        Path p = Path.of("leaderboard.json");
-        String entry = String.format("{\"score\":%d}", score);
+    public static void saveScore(String username, int score) {
+        Path p = Path.of("leaderboard.csv");
+        // sanitize username to avoid commas/newlines in CSV
+        String safeName = username == null ? "" : username.replaceAll("[\\r\\n,]+", " ");
+        String entry = String.format("%s,%d%s", safeName, score, System.lineSeparator());
 
         try {
-            // Creates json pag wala sa files
-            if (Files.exists(p)) {
-                String raw = Files.readString(p, StandardCharsets.UTF_8);
-                String trimmed = raw.trim();
-                if (trimmed.startsWith("[")) {
-                    if (trimmed.equals("[]")) {
-                        Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                    } else {
-                        int lastBracket = trimmed.lastIndexOf(']');
-                        if (lastBracket == -1) {
-                            Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                        } else {
-                            String prefix = trimmed.substring(0, lastBracket).trim();
-                            if (prefix.endsWith("[")) {
-                                Files.writeString(p, prefix + entry + "]", StandardCharsets.UTF_8);
-                            } else {
-                                Files.writeString(p, prefix + "," + entry + "]", StandardCharsets.UTF_8);
-                            }
-                        }
-                    }
-                } else if (trimmed.isEmpty()) {
-                    Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                } else {
-                    Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-                }
-            } else {
-                Files.writeString(p, "[" + entry + "]", StandardCharsets.UTF_8);
-            }
+            Files.writeString(p, entry, StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
         } catch (IOException e) {
             System.err.println("Failed to save score: " + e.getMessage());
         }
@@ -83,5 +61,34 @@ public class GameUtils {
             
             System.out.println("Invalid gender. Please enter Male or Female.");
         }
+    }
+
+    public static List<Integer> loadScores() {
+        Path p = Path.of("leaderboard.csv");
+        List<Integer> scores = new ArrayList<>();
+        if (!Files.exists(p)) {
+            return scores;
+        }
+
+        try {
+            List<String> lines = Files.readAllLines(p, StandardCharsets.UTF_8);
+            for (String line : lines) {
+                if (line == null) continue;
+                String trimmed = line.trim();
+                if (trimmed.isEmpty()) continue;
+                String[] parts = trimmed.split(",", 2);
+                if (parts.length < 2) continue;
+                try {
+                    int s = Integer.parseInt(parts[1].trim());
+                    scores.add(s);
+                } catch (NumberFormatException ignored) {
+                    // skip malformed score lines
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to load scores: " + e.getMessage());
+        }
+
+        return scores;
     }
 }
