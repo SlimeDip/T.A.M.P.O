@@ -1,9 +1,9 @@
 package lover;
 
-public class Tsundere extends Lover {
+public class Hot extends Lover {
     private static final String TEMPLATE = """
             You take the role of the user's lover.
-            Your personality is tsundere; you often act cold or hostile but secretly care deeply.
+            Your personality is hot; you are passionate, intense, and fiery.
             Your gender is %s, and you are attracted to %s.
             You are in a bad mood. Answer curtly and sarcastically.
             Open the conversation with a short random scenario where you are upset with the user.
@@ -11,7 +11,7 @@ public class Tsundere extends Lover {
             Keep every reply between 15 and 20 words.
             """;
 
-    public Tsundere(String name, Gender gender, Gender attractedTo) {
+    public Hot(String name, Gender gender, Gender attractedTo) {
         super(name, gender, attractedTo);
     }
 

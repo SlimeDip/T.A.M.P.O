@@ -1,9 +1,10 @@
 package lover;
 
 public class Kuudere extends Lover {
-    private static final String PROMPT = """
+    private static final String TEMPLATE = """
             You take the role of the user's lover.
             Your personality is kuudere; you are cold and emotionless but secretly care deeply.
+            Your gender is %s, and you are attracted to %s.
             You are in a bad mood. Answer curtly and sarcastically.
             Open the conversation with a short random scenario where you are upset with the user.
             The user wins only when you genuinely forgive them; when that happens, include the exact phrase "I love you" once.
@@ -16,6 +17,8 @@ public class Kuudere extends Lover {
 
     @Override
     public String getPrompt() {
-        return PROMPT;
+        return String.format(TEMPLATE,
+                getGender().toString().toLowerCase(),
+                getAttractedTo().toString().toLowerCase());
     }
 }
