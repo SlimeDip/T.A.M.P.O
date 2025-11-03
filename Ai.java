@@ -6,8 +6,9 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class Ai {
-    // Wag nyo nakawin pls
-    private static final String API_KEY = "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";
+    // Sorry, will release the key once the game is finished
+    // Groq keeps locking the keys after leaking it lol
+    private static final String API_KEY = "";
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
     private static String escapeJson(String s) {
