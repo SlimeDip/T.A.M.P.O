@@ -2,6 +2,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Scanner;
+
+import lover.Gender;
 
 public class GameUtils {
     public static void saveScore(int score) {
@@ -53,6 +56,32 @@ public class GameUtils {
             }
         } catch (final Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static Gender parseGenderInput(Scanner input, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String line = input.nextLine();
+
+            line = line.trim();
+
+            if (line.isEmpty()) {
+                System.out.println("Please enter Male or Female.");
+                continue;
+            }
+
+            String normalized = line.toLowerCase();
+
+            if (normalized.equals("m") || normalized.equals("male")) {
+                return Gender.Male;
+            }
+
+            if (normalized.equals("f") || normalized.equals("female")) {
+                return Gender.Female;
+            }
+            
+            System.out.println("Invalid gender. Please enter Male or Female.");
         }
     }
 }

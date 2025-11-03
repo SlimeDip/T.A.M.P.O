@@ -21,11 +21,15 @@ import lover.*;
 // - Polymorphism: Male or Female nalang siguro
 
 public class Main {
+    private static final List<User> profiles = new ArrayList<>();
+    private static User currentUser = null;
+
     private static void menu(Scanner input) {
         while (true) { 
             System.out.println("=== Suyo Simulator ===");
+            System.out.println("Current Profile: " + currentUser.getName());
             System.out.println("1. Start game");
-            System.out.println("2. Create Character");
+            System.out.println("2. Create New Profile");
             System.out.println("3. Select Profile");
             System.out.println("4. Leaderboard");
             System.out.println("5. Tutorial");
@@ -43,7 +47,7 @@ public class Main {
                     characterCreation(input);
                     break;
                 case "3":
-                    loverCreation(input);
+                    viewProfiles(input);
                     break;
                 case "4":
                     System.out.println("=== Leaderboard ===");
@@ -132,36 +136,38 @@ public class Main {
         System.out.print("Enter your name: ");
         String name = input.nextLine().trim();
 
-        System.out.print("Enter your gender (Male/Female): ");
-        Gender gender = Gender.valueOf(input.nextLine().trim());
+        Gender gender = GameUtils.parseGenderInput(input, "Enter your gender (Male/Female): ");
 
-        System.out.print("Enter your what gender are you attracted to? (Male/Female): ");
-        Gender attractedTo = Gender.valueOf(input.nextLine().trim());
+        Gender attractedTo = GameUtils.parseGenderInput(input, "Enter the gender you are attracted to (Male/Female): ");
 
+        System.out.println("\nCharacter created: " + name + " (" + gender + ", attracted to " + attractedTo + ")");
+        System.out.println("Press Enter to proceed to lover creation...");
+        input.nextLine();
         User user = new User(name, gender, attractedTo);
+        GameUtils.clearConsole();
+        loverCreation(input, user);
     }
 
-    private static void loverCreation(Scanner input) {
+    private static void loverCreation(Scanner input, User user) {
         System.out.println("=== Lover Creation ===");
         System.out.print("Enter lover's name: ");
         String name = input.nextLine().trim();
 
-        System.out.print("Enter lover's gender (Male/Female): ");
-        Gender gender = Gender.valueOf(input.nextLine().trim());
+        Gender gender = user.getAttractedTo();
+        Gender attractedTo = user.getGender();
 
-        System.out.print("Enter lover's attractedTo: ");
-        Gender attractedTo = Gender.valueOf(input.nextLine().trim());
-
-        System.out.print("Select lover's personality type: ");
-        System.out.print("1. Default");
-        System.out.print("2. Hostile and cold (Tsundere) ");
-        System.out.print("3. Sweet and caring (Deredere) ");
-        System.out.print("4. Emotionless and aloof (Kuudere) ");
+        System.out.println("\nSelect lover's personality type:");
+        System.out.println("1. Default");
+        System.out.println("2. Hostile and cold (Tsundere)");
+        System.out.println("3. Sweet and caring (Deredere)");
+        System.out.println("4. Emotionless and aloof (Kuudere)");
         System.out.print("Enter your choice: ");
         int personalityChoice = 1;
+        String personalityType = "Default";
 
         try {
             personalityChoice = input.nextInt();
+            input.nextLine();
         } catch (Exception e) {
             System.out.print("Invalid input. Defaulting to 1: ");
             personalityChoice = 1;
@@ -174,23 +180,52 @@ public class Main {
                 break;
             case 2:
                 lover = new Tsundere(name, gender, attractedTo);
+                personalityType = "Tsundere";
                 break;
             case 3:
                 lover = new Deredere(name, gender, attractedTo);
+                personalityType = "Deredere";
                 break;
             case 4:
                 lover = new Kuudere(name, gender, attractedTo);
+                personalityType = "Kuudere";
                 break;
             default:
                 System.out.println("Invalid choice. Choosing Default personality.");
                 lover = new Lover(name, gender, attractedTo);
         }
 
-        System.out.println("Lover created: " + lover.getName() + " (" + lover.getPrompt() + ")");
-        System.out.println("Press Enter to return to menu...");
+        user.setLover(lover);
+        profiles.add(user);
+        currentUser = user;
+
+        System.out.println("\nLover created: " + name + " (" + gender + ", attracted to " + attractedTo + ")");
+        System.out.println("Personality type: " + personalityType);
+        System.out.println("\nLover Creation complete! Press Enter to return to menu...");
         input.nextLine();
         GameUtils.clearConsole();
+    }
 
+    private static void viewProfiles(Scanner input) {
+        int num = 1;
+        for (User user : profiles) {
+            System.out.print(num + ". User: " + user.getName() + " (" + user.getGender() + ", attracted to " + user.getAttractedTo() + ")");
+            Lover lover = user.getLover();
+            System.out.println(" | Lover: " + lover.getName() + " (" + lover.getGender() + ", attracted to " + lover.getAttractedTo() + ")");
+            num++;
+        }
+
+        System.out.print("\nSelect profile to use: ");
+        int profileIndex = input.nextInt() - 1;
+        input.nextLine();
+
+        if (profileIndex >= 0 && profileIndex < profiles.size()) {
+            currentUser = profiles.get(profileIndex);
+            System.out.println("Profile selected: " + currentUser.getName());
+        } else {
+            System.out.println("Invalid profile selection.");
+        }
+        GameUtils.clearConsole();
     }
 
     public static void main(String[] args) {

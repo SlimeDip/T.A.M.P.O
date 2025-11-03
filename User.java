@@ -1,9 +1,11 @@
 import lover.Gender;
+import lover.Lover;
 
 public class User {
     private String name;
     private Gender gender;
     private Gender attractedTo;
+    private Lover lover;
     private int score;
 
     public User(String name, Gender gender, Gender attractedTo) {
@@ -31,5 +33,13 @@ public class User {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public Lover getLover() {
+        return lover;
+    }
+
+    public void setLover(Lover lover) {
+        this.lover = lover;
     }
 }
