@@ -262,7 +262,7 @@ public class Main {
         GameUtils.clearConsole();
         
         List<User> loaded = GameUtils.loadProfiles();
-        if (!loaded.isEmpty()) {
+        if (loaded != null && !loaded.isEmpty()) {
             profiles.addAll(loaded);
             currentUser = profiles.get(0);
         } else {
