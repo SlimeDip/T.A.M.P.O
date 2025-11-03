@@ -6,9 +6,21 @@ import java.net.http.HttpResponse;
 import java.util.List;
 
 public class Ai {
-    // Sorry guys, secret for now
-    private static final String API_KEY = "YOUR_API_KEY_HERE";
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
+
+    private static String requireApiKey() {
+        // Prefer system property: -Dgroq.api.key=...
+        String key = System.getProperty("groq.api.key");
+        if (key == null || key.isBlank()) {
+            // Fallback to environment variable
+            key = System.getenv("GROQ_API_KEY");
+        }
+        if (key == null || key.isBlank()) {
+            throw new IllegalStateException(
+                "Missing Groq API key. Set env var GROQ_API_KEY or JVM property -Dgroq.api.key before running.");
+        }
+        return key;
+    }
 
     private static String escapeJson(String s) {
         if (s == null) {
@@ -49,7 +61,7 @@ public class Ai {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(API_URL))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer " + API_KEY)
+                .header("Authorization", "Bearer " + requireApiKey())
                 .POST(BodyPublishers.ofString(requestBody))
                 .build();
 
