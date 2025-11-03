@@ -1,3 +1,4 @@
-leaderboard.json
-.env
+leaderboard.csv
+profiles.txt
+key.txt
 logs/

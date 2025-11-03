@@ -1,0 +1,26 @@
+package lover;
+
+public class User {
+    private String name;
+    private Gender gender;
+    private Gender attractedTo;
+    private Lover lover;
+    private int score;
+
+    public User(String name, Gender gender, Gender attractedTo) {
+        this.name = name;
+        this.gender = gender;
+        this.attractedTo = attractedTo;
+        this.score = 0;
+    }
+
+    public String getName() { return name;}
+    public Gender getGender() { return gender;}
+    public Gender getAttractedTo() { return attractedTo; }
+    public int getScore() { return score; }
+
+    public void setName(String name) { this.name = name; }
+    public void setScore(int score) { this.score = score; }
+    public Lover getLover() { return lover; }
+    public void setLover(Lover lover) { this.lover = lover; }
+}

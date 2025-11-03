@@ -1,16 +1,9 @@
 package lover;
 
-public class Lover {
+public abstract class Lover {
     private String name;
     private Gender gender;
     private Gender attractedTo;
-    private String prompt = """
-                You take the role of the user's lover.
-                You are in a bad mood. Answer curtly and sarcastically.
-                Open the conversation with a short random scenario where you are upset with the user.
-                The user wins only when you genuinely forgive them; when that happens, include the exact phrase "I love you" once.
-                Keep every reply between 15 and 20 words.
-                """;
 
     public Lover(String name, Gender gender, Gender attractedTo) {
         this.name = name;
@@ -18,19 +11,13 @@ public class Lover {
         this.attractedTo = attractedTo;
     }
 
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public Gender getGender() { return gender; }
+    public Gender getAttractedTo() { return attractedTo; }
 
-    public Gender getGender() {
-        return gender;
-    }
+    public void setName(String name) { this.name = name; }
+    public void setGender(Gender gender) { this.gender = gender; }
+    public void setAttractedTo(Gender attractedTo) { this.attractedTo = attractedTo; }
 
-    public Gender getAttractedTo() {
-        return attractedTo;
-    }
-
-    public String getPrompt() {
-        return prompt;
-    }
+    public abstract String getPrompt();
 }
