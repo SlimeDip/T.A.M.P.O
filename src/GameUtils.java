@@ -1,3 +1,5 @@
+package src;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -7,7 +9,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
-import lover.*;
+import src.lover.*;
+import src.userinterface.Gender;
+import src.userinterface.User;
 
 public class GameUtils {
     public static void saveScore(String username, int score) {

@@ -1,7 +1,11 @@
+package src;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import lover.*;
+import src.lover.*;
+import src.userinterface.*;
+
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
