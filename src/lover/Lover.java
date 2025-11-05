@@ -1,4 +1,6 @@
-package lover;
+package src.lover;
+
+import src.userinterface.Gender;
 
 public abstract class Lover {
     private String name;

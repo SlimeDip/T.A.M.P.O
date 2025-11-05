@@ -1,3 +1,5 @@
+package src.userinterface;
+
 public class Message {
     private String role;
     private String content;

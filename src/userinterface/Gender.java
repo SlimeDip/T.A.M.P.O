@@ -1,4 +1,4 @@
-package lover;
+package src.userinterface;
 
 public enum Gender {
     Male,
