@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 import src.lover.*;
 import src.userinterface.Gender;
+import src.userinterface.Language;
 import src.userinterface.User;
 
 public class GameUtils {
@@ -153,8 +154,9 @@ public class GameUtils {
             String loverName = lover.getName().replaceAll("[\r\n|]", " ");
             String loverGender = lover.getGender().toString();
             String loverAttracted = lover.getAttractedTo().toString();
-            
-            String line = String.join("|", safeName, gender, attracted, loverClass, loverName, loverGender, loverAttracted);
+            String language = lover.getLanguage().toString();
+
+            String line = String.join("|", safeName, gender, attracted, loverClass, loverName, loverGender, loverAttracted, language);
             lines.add(line);
         }
 
@@ -178,7 +180,7 @@ public class GameUtils {
                 if (trimmed.isEmpty()) continue;
                 String[] parts = trimmed.split("\\|", -1);
                 
-                if (parts.length < 7) continue;
+                if (parts.length < 8) continue;
                 String name = parts[0].trim();
                 
                 Gender g = parseGenderString(parts[1].trim());
@@ -187,6 +189,7 @@ public class GameUtils {
                 String loverName = parts[4].trim();
                 Gender loverGender = parseGenderString(parts[5].trim());
                 Gender loverAttracted = parseGenderString(parts[6].trim());
+                Language language = parseLanguageString(parts[7].trim());
 
                 User u = new User(name, g, attracted);
 
@@ -194,19 +197,22 @@ public class GameUtils {
                 if (!loverClass.isEmpty()) {
                     switch (loverClass) {
                         case "Deredere":
-                            lover = new Deredere(loverName, loverGender, loverAttracted);
+                            lover = new Deredere(loverName, loverGender, loverAttracted, language);
                             break;
                         case "Tsundere":
-                            lover = new Tsundere(loverName, loverGender, loverAttracted);
+                            lover = new Tsundere(loverName, loverGender, loverAttracted, language);
                             break;
                         case "Kuudere":
-                            lover = new Kuudere(loverName, loverGender, loverAttracted);
+                            lover = new Kuudere(loverName, loverGender, loverAttracted, language);
                             break;
                         case "Hot":
-                            lover = new Hot(loverName, loverGender, loverAttracted);
+                            lover = new Hot(loverName, loverGender, loverAttracted, language);
                             break;
                         case "Chuunibyou":
-                            lover = new Chuunibyou(loverName, loverGender, loverAttracted);
+                            lover = new Chuunibyou(loverName, loverGender, loverAttracted, language);
+                            break;
+                        case "YoungStunna":
+                            lover = new YoungStunna(loverName, loverGender, loverAttracted, language);
                             break;  
                         default:
                             // unknown class - skip creating lover
@@ -228,5 +234,14 @@ public class GameUtils {
         if (n.equals("m") || n.equals("male")) return Gender.Male;
         if (n.equals("f") || n.equals("female")) return Gender.Female;
         try { return Gender.valueOf(s); } catch (Exception ex) { return Gender.Male; }
+    }
+
+    private static Language parseLanguageString(String s) {
+        String n = s.trim().toLowerCase();
+        if (n.equals("english")) return Language.ENGLISH;
+        if (n.equals("tagalog")) return Language.TAGALOG;
+        if (n.equals("bisaya")) return Language.BISAYA;
+
+        try { return Language.valueOf(s); } catch (Exception ex) { return Language.ENGLISH; }
     }
 }
