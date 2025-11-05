@@ -166,6 +166,7 @@ public class Main {
         System.out.println("3. Sweet and caring (Deredere)");
         System.out.println("4. Emotionless and aloof (Kuudere)");
         System.out.println("5. Delusional and dramatic (Chuunibyou)");
+        System.out.println("6. Swagger and attitude (YoungStunna)");
         System.out.print("Enter your choice: ");
         int personalityChoice = 1;
         String personalityType = "Default";
@@ -199,6 +200,10 @@ public class Main {
             case 5:
                 lover = new Chuunibyou(name, gender, attractedTo);
                 personalityType = "Chuunibyou";
+                break;
+            case 6:
+                lover = new YoungStunna(name, gender, attractedTo);
+                personalityType = "YoungStunna";
                 break;
             default:
                 System.out.println("Invalid choice. Choosing Default personality.");
