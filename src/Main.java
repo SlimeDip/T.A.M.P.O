@@ -160,6 +160,28 @@ public class Main {
         System.out.println("=== Lover Creation ===");
         System.out.print("Enter lover's name: ");
         String name = input.nextLine().trim();
+        System.out.println("Pick your Lover's Language");
+        System.out.println("1. English");
+        System.out.println("2. Tagalog");
+        System.out.println("3. Bisaya");
+        
+        String choice = input.nextLine();
+        Language language;
+        switch (choice) {
+            case "1":
+                language = Language.ENGLISH;
+                break;
+            case "2":
+                language = Language.TAGALOG;
+                break;
+            case "3":
+                language = Language.BISAYA;
+                break;
+            default:
+                language = Language.ENGLISH;
+                break;
+        }
+        
 
         Gender gender = user.getAttractedTo();
         Gender attractedTo = user.getGender();
@@ -186,32 +208,32 @@ public class Main {
         Lover lover;
         switch (personalityChoice) {
             case 1:
-                lover = new Hot(name, gender, attractedTo);
+                lover = new Hot(name, gender, attractedTo, language);
                 personalityType = "Hot";
                 break;
             case 2:
-                lover = new Tsundere(name, gender, attractedTo);
+                lover = new Tsundere(name, gender, attractedTo, language);
                 personalityType = "Tsundere";
                 break;
             case 3:
-                lover = new Deredere(name, gender, attractedTo);
+                lover = new Deredere(name, gender, attractedTo, language);
                 personalityType = "Deredere";
                 break;
             case 4:
-                lover = new Kuudere(name, gender, attractedTo);
+                lover = new Kuudere(name, gender, attractedTo, language);
                 personalityType = "Kuudere";
                 break;
             case 5:
-                lover = new Chuunibyou(name, gender, attractedTo);
+                lover = new Chuunibyou(name, gender, attractedTo, language);
                 personalityType = "Chuunibyou";
                 break;
             case 6:
-                lover = new YoungStunna(name, gender, attractedTo);
+                lover = new YoungStunna(name, gender, attractedTo, language);
                 personalityType = "YoungStunna";
                 break;
             default:
                 System.out.println("Invalid choice. Choosing Default personality.");
-                lover = new Hot(name, gender, attractedTo);
+                lover = new Hot(name, gender, attractedTo, language);
         }
 
         user.setLover(lover);
