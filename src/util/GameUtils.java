@@ -1,4 +1,4 @@
-package src;
+package src.util;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,15 +8,11 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
 import src.lover.*;
-import src.userinterface.Gender;
-import src.userinterface.Language;
-import src.userinterface.User;
 
 public class GameUtils {
     public static void saveScore(String username, int score) {
-        Path p = Path.of("leaderboard.csv");
+        Path p = Path.of("src/savefile/leaderboard.csv");
         
         String safeName = username == null ? "" : username.replaceAll("[\\r\\n,]+", " ");
         String entry = String.format("%s,%d%s", safeName, score, System.lineSeparator());
@@ -43,34 +39,8 @@ public class GameUtils {
         }
     }
 
-    public static Gender parseGenderInput(Scanner input, String prompt) {
-        while (true) {
-            System.out.print(prompt);
-            String line = input.nextLine();
-
-            line = line.trim();
-
-            if (line.isEmpty()) {
-                System.out.println("Please enter Male or Female.");
-                continue;
-            }
-
-            String normalized = line.toLowerCase();
-
-            if (normalized.equals("m") || normalized.equals("male")) {
-                return Gender.Male;
-            }
-
-            if (normalized.equals("f") || normalized.equals("female")) {
-                return Gender.Female;
-            }
-            
-            System.out.println("Invalid gender. Please enter Male or Female.");
-        }
-    }
-
     public static List<Integer> loadScores() {
-        Path p = Path.of("leaderboard.csv");
+        Path p = Path.of("src/savefile/leaderboard.csv");
         List<Integer> scores = new ArrayList<>();
         if (!Files.exists(p)) {
             return scores;
@@ -99,7 +69,7 @@ public class GameUtils {
     }
 
     public static List<ScoreEntry> loadLeaderboard() {
-        Path p = Path.of("leaderboard.csv");
+        Path p = Path.of("src/savefile/leaderboard.csv");
         List<ScoreEntry> entries = new ArrayList<>();
         if (!Files.exists(p)) return entries;
 
@@ -143,7 +113,7 @@ public class GameUtils {
 
     // username|gender|attractedTo|loverClass|loverName|loverGender|loverAttractedTo
     public static void saveProfiles(List<User> profiles) {
-        Path p = Path.of("profiles.txt");
+        Path p = Path.of("src/savefile/profiles.txt");
         List<String> lines = new ArrayList<>();
         for (User u : profiles) {
             String safeName = u.getName().replaceAll("[\r\n|]", " ");
@@ -168,7 +138,7 @@ public class GameUtils {
     }
 
     public static List<User> loadProfiles() {
-        Path p = Path.of("profiles.txt");
+        Path p = Path.of("src/savefile/profiles.txt");
         List<User> users = new ArrayList<>();
         if (!Files.exists(p)) return users;
 
@@ -229,14 +199,14 @@ public class GameUtils {
         return users;
     }
 
-    private static Gender parseGenderString(String s) {
+    public static Gender parseGenderString(String s) {
         String n = s.trim().toLowerCase();
-        if (n.equals("m") || n.equals("male")) return Gender.Male;
-        if (n.equals("f") || n.equals("female")) return Gender.Female;
+        if (n.equals("male")) return Gender.Male;
+        if (n.equals("female")) return Gender.Female;
         try { return Gender.valueOf(s); } catch (Exception ex) { return Gender.Male; }
     }
 
-    private static Language parseLanguageString(String s) {
+    public static Language parseLanguageString(String s) {
         String n = s.trim().toLowerCase();
         if (n.equals("english")) return Language.ENGLISH;
         if (n.equals("tagalog")) return Language.TAGALOG;

@@ -1,4 +1,4 @@
-package src;
+package src.main;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -6,7 +6,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.List;
-import src.userinterface.Message;
+import src.util.Message;
 
 public class Ai {
     // Sorry, will release the key once the game is finished

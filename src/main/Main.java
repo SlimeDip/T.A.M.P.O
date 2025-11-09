@@ -1,10 +1,10 @@
-package src;
+package src.main;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import src.lover.*;
-import src.userinterface.*;
+import src.util.*;
 
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
@@ -144,9 +144,11 @@ public class Main {
         System.out.print("Enter your name: ");
         String name = input.nextLine().trim();
 
-        Gender gender = GameUtils.parseGenderInput(input, "Enter your gender (Male/Female): ");
+        System.out.print("Enter your gender (Male/Female): ");
+        Gender gender = GameUtils.parseGenderString(input.nextLine().trim());
 
-        Gender attractedTo = GameUtils.parseGenderInput(input, "Enter the gender you are attracted to (Male/Female): ");
+        System.out.print("Enter the gender you are attracted to (Male/Female): ");
+        Gender attractedTo = GameUtils.parseGenderString(input.nextLine().trim());
 
         System.out.println("\nCharacter created: " + name + " (" + gender + ", attracted to " + attractedTo + ")");
         System.out.println("Press Enter to proceed to lover creation...");
@@ -160,10 +162,11 @@ public class Main {
         System.out.println("=== Lover Creation ===");
         System.out.print("Enter lover's name: ");
         String name = input.nextLine().trim();
-        System.out.println("Pick your Lover's Language");
+        System.out.println("\nPick your Lover's Language");
         System.out.println("1. English");
         System.out.println("2. Tagalog");
         System.out.println("3. Bisaya");
+        System.out.print("Enter your choice: ");
         
         String choice = input.nextLine();
         Language language;

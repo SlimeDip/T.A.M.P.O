@@ -1,7 +1,8 @@
 package src.lover;
 
-import src.userinterface.Gender;
-import src.userinterface.Language;
+import src.util.Gender;
+import src.util.Language;
+import src.util.Lover;
 
 public class Kuudere extends Lover {
     private static final String TEMPLATE = """

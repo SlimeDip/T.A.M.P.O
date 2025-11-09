@@ -1,7 +1,4 @@
-package src.lover;
-
-import src.userinterface.Gender;
-import src.userinterface.Language;
+package src.util;
 
 public abstract class Lover {
     private String name;

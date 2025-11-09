@@ -1,4 +1,4 @@
-package src.userinterface;
+package src.util;
 
 public enum Language {
     ENGLISH,
