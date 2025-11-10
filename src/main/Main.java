@@ -162,6 +162,7 @@ public class Main {
         System.out.println("1. English");
         System.out.println("2. Tagalog");
         System.out.println("3. Bisaya");
+        System.out.println("4. Cebuano");
         System.out.print("Enter your choice: ");
         
         String choice = input.nextLine().trim();
@@ -175,6 +176,9 @@ public class Main {
                 break;
             case "3":
                 language = Language.Bisaya;
+                break;
+            case "4":
+                language = Language.Cebuano;
                 break;
             default:
                 language = Language.English;
@@ -191,6 +195,7 @@ public class Main {
         System.out.println("4. Emotionless and aloof (Kuudere)");
         System.out.println("5. Delusional and dramatic (Chuunibyou)");
         System.out.println("6. Swagger and attitude (Young Stunna)");
+        System.out.println("7. Shy and soft-spoken (Timid)");
         System.out.print("Enter your choice: ");
         int personalityChoice = 1;
         String personalityType = "Default";
@@ -228,6 +233,10 @@ public class Main {
             case 6:
                 lover = new YoungStunna(name, gender, attractedTo, language);
                 personalityType = "Young Stunna";
+                break;
+            case 7:
+                lover = new Timid(name, gender, attractedTo, language);
+                personalityType = "Timid";
                 break;
             default:
                 System.out.println("Invalid choice. Choosing Default personality.");
