@@ -1,4 +1,5 @@
 .env
 key.txt
-savefile/
+leaderboard.csv
+profiles.txt
 logs/

@@ -14,7 +14,7 @@ public class GameUtils {
     public static void saveScore(String username, int score) {
         Path p = Path.of("src/savefile/leaderboard.csv");
         
-        String safeName = username == null ? "" : username.replaceAll("[\\r\\n,]+", " ");
+        String safeName = username == null ? "User" : username.replaceAll("[\\r\\n,]+", " ");
         String entry = String.format("%s,%d%s", safeName, score, System.lineSeparator());
 
         try {
@@ -71,7 +71,9 @@ public class GameUtils {
     public static List<ScoreEntry> loadLeaderboard() {
         Path p = Path.of("src/savefile/leaderboard.csv");
         List<ScoreEntry> entries = new ArrayList<>();
-        if (!Files.exists(p)) return entries;
+        if (!Files.exists(p)) {
+            return entries;
+        }
 
         try {
             List<String> lines = Files.readAllLines(p, StandardCharsets.UTF_8);
@@ -103,7 +105,7 @@ public class GameUtils {
         private final int score;
 
         public ScoreEntry(String username, int score) {
-            this.username = username == null ? "" : username;
+            this.username = username == null ? "User" : username;
             this.score = score;
         }
 
@@ -176,7 +178,7 @@ public class GameUtils {
                             lover = new Kuudere(loverName, loverGender, loverAttracted, language);
                             break;
                         case "Hot":
-                            lover = new Hot(loverName, loverGender, loverAttracted, language);
+                            lover = new Passionate(loverName, loverGender, loverAttracted, language);
                             break;
                         case "Chuunibyou":
                             lover = new Chuunibyou(loverName, loverGender, loverAttracted, language);
@@ -203,15 +205,25 @@ public class GameUtils {
         String n = s.trim().toLowerCase();
         if (n.equals("male")) return Gender.Male;
         if (n.equals("female")) return Gender.Female;
-        try { return Gender.valueOf(s); } catch (Exception ex) { return Gender.Male; }
+        try { 
+            return Gender.valueOf(s); 
+        } catch (Exception ex) {
+            System.out.println("Invalid gender input. Defaulting to Male.");
+            return Gender.Male; 
+        }
     }
 
     public static Language parseLanguageString(String s) {
         String n = s.trim().toLowerCase();
-        if (n.equals("english")) return Language.ENGLISH;
-        if (n.equals("tagalog")) return Language.TAGALOG;
-        if (n.equals("bisaya")) return Language.BISAYA;
+        if (n.equals("english")) return Language.English;
+        if (n.equals("tagalog")) return Language.Tagalog;
+        if (n.equals("bisaya")) return Language.Bisaya;
 
-        try { return Language.valueOf(s); } catch (Exception ex) { return Language.ENGLISH; }
+        try { 
+            return Language.valueOf(s); 
+        } catch (Exception ex) {
+            System.out.println("Invalid language input. Defaulting to English.");
+            return Language.English; 
+        }
     }
 }

@@ -42,7 +42,7 @@ public class Ai {
         // Change temperature (closer to 1) kung gusto nyo na mas creative sagot jowa nyo
         String requestBody = String.format("""
             {
-                "model": "llama-3.1-8b-instant",
+                "model": "llama-3.3-70b-versatile",
                 "messages": [%s],
                 "temperature": 0.7,
                 "max_tokens": 1024
