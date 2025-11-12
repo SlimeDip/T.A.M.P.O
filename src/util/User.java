@@ -1,6 +1,4 @@
-package src.userinterface;
-
-import src.lover.Lover;
+package src.util;
 
 public class User {
     private String name;

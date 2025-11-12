@@ -1,11 +1,10 @@
-package src;
+package src.main;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import src.lover.*;
-import src.userinterface.*;
-
+import src.util.*;
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
@@ -19,22 +18,8 @@ import src.userinterface.*;
 // Then, add a case in loverCreation() switch statement to create an instance of the new
 // Also edit loadProfiles() and saveProfiles() in GameUtils.java to support the new Lover class
 
-
-// CHANGELOG
-// - Added a score saving system
-// - Leaderboard is not really implemented yet (time and score lang iniistore, dapat ay user name and score lang)
-// - New User class to represent players (WIP)
-// - New GameUtils class for utility functions
-// - Cleaner menu system
-// - Added character and lover creation flow
-// - Added personality types for lovers (Hot, Tsundere, Deredere, Kuudere)
-// - Improved AI prompt system based on lover personality
-
-
 // TO DO LIST
-// - Implement leaderboard viewing
 // - Improve AI prompt system (try more personality types)
-// - Kung kaya pa ay local saving ng profiles (file system)
 
 public class Main {
     private static final List<User> profiles = new ArrayList<>();
@@ -74,7 +59,7 @@ public class Main {
                     System.out.println("Every message you enter gives you a score.");
                     System.out.println("The lower your score when you win, the better!");
                     System.out.println("Type 'exit' to quit the game anytime.");
-                    System.out.println("Press Enter to return to the menu...");
+                    System.out.println("\nPress Enter to return to the menu...");
                     input.nextLine();
                     GameUtils.clearConsole();
                     break;
@@ -95,6 +80,9 @@ public class Main {
 
         try {
             String prompt = currentUser.getLover().getPrompt();
+            System.out.println("Language: " + currentUser.getLover().getLanguage().toString());
+            System.out.println("Personality: " + currentUser.getLover().getClass().getSimpleName());
+            System.out.println("\n=== Game Start ===\n");
 
             List<Message> history = new ArrayList<>();
             history.add(new Message("system", prompt));
@@ -128,6 +116,7 @@ public class Main {
                 }
 
                 if (userMessage.isEmpty()) {
+                    history.add(new Message("user", "..."));
                     System.out.println();
                 } else {
                     history.add(new Message("user", userMessage));
@@ -143,10 +132,15 @@ public class Main {
         System.out.println("=== Character Creation ===");
         System.out.print("Enter your name: ");
         String name = input.nextLine().trim();
+        if (name.isEmpty()) {
+            name = "User";
+        }
 
-        Gender gender = GameUtils.parseGenderInput(input, "Enter your gender (Male/Female): ");
+        System.out.print("Enter your gender (Male/Female): ");
+        Gender gender = GameUtils.parseGenderString(input.nextLine().trim());
 
-        Gender attractedTo = GameUtils.parseGenderInput(input, "Enter the gender you are attracted to (Male/Female): ");
+        System.out.print("Enter the gender you are attracted to (Male/Female): ");
+        Gender attractedTo = GameUtils.parseGenderString(input.nextLine().trim());
 
         System.out.println("\nCharacter created: " + name + " (" + gender + ", attracted to " + attractedTo + ")");
         System.out.println("Press Enter to proceed to lover creation...");
@@ -160,28 +154,36 @@ public class Main {
         System.out.println("=== Lover Creation ===");
         System.out.print("Enter lover's name: ");
         String name = input.nextLine().trim();
-        System.out.println("Pick your Lover's Language");
+        if (name.isEmpty()) {
+            name = "Lover";
+        }
+
+        System.out.println("\nPick your Lover's Language");
         System.out.println("1. English");
         System.out.println("2. Tagalog");
         System.out.println("3. Bisaya");
+        System.out.println("4. Cebuano");
+        System.out.print("Enter your choice: ");
         
-        String choice = input.nextLine();
+        String choice = input.nextLine().trim();
         Language language;
         switch (choice) {
             case "1":
-                language = Language.ENGLISH;
+                language = Language.English;
                 break;
             case "2":
-                language = Language.TAGALOG;
+                language = Language.Tagalog;
                 break;
             case "3":
-                language = Language.BISAYA;
+                language = Language.Bisaya;
+                break;
+            case "4":
+                language = Language.Cebuano;
                 break;
             default:
-                language = Language.ENGLISH;
+                language = Language.English;
                 break;
         }
-        
 
         Gender gender = user.getAttractedTo();
         Gender attractedTo = user.getGender();
@@ -192,7 +194,8 @@ public class Main {
         System.out.println("3. Sweet and caring (Deredere)");
         System.out.println("4. Emotionless and aloof (Kuudere)");
         System.out.println("5. Delusional and dramatic (Chuunibyou)");
-        System.out.println("6. Swagger and attitude (YoungStunna)");
+        System.out.println("6. Swagger and attitude (Young Stunna)");
+        System.out.println("7. Shy and soft-spoken (Timid)");
         System.out.print("Enter your choice: ");
         int personalityChoice = 1;
         String personalityType = "Default";
@@ -208,32 +211,29 @@ public class Main {
         Lover lover;
         switch (personalityChoice) {
             case 1:
-                lover = new Hot(name, gender, attractedTo, language);
-                personalityType = "Hot";
+                lover = new Passionate(name, gender, attractedTo, language);
                 break;
             case 2:
                 lover = new Tsundere(name, gender, attractedTo, language);
-                personalityType = "Tsundere";
                 break;
             case 3:
                 lover = new Deredere(name, gender, attractedTo, language);
-                personalityType = "Deredere";
                 break;
             case 4:
                 lover = new Kuudere(name, gender, attractedTo, language);
-                personalityType = "Kuudere";
                 break;
             case 5:
                 lover = new Chuunibyou(name, gender, attractedTo, language);
-                personalityType = "Chuunibyou";
                 break;
             case 6:
                 lover = new YoungStunna(name, gender, attractedTo, language);
-                personalityType = "YoungStunna";
+                break;
+            case 7:
+                lover = new Timid(name, gender, attractedTo, language);
                 break;
             default:
                 System.out.println("Invalid choice. Choosing Default personality.");
-                lover = new Hot(name, gender, attractedTo, language);
+                lover = new Passionate(name, gender, attractedTo, language);
         }
 
         user.setLover(lover);
@@ -243,7 +243,7 @@ public class Main {
         GameUtils.saveProfiles(profiles);
 
         System.out.println("\nLover created: " + name + " (" + gender + ", attracted to " + attractedTo + ")");
-        System.out.println("Personality type: " + personalityType);
+        System.out.println("Personality type: " + currentUser.getLover().getClass().getSimpleName());
         System.out.println("\nLover Creation complete! Press Enter to return to menu...");
         input.nextLine();
         GameUtils.clearConsole();
@@ -252,9 +252,9 @@ public class Main {
     private static void viewProfiles(Scanner input) {
         int num = 1;
         for (User user : profiles) {
-            System.out.print(num + ". User: " + user.getName() + " (" + user.getGender() + ", attracted to " + user.getAttractedTo() + ")");
+            System.out.print(num + ". User: " + user.getName());
             Lover lover = user.getLover();
-            System.out.println(" | Lover: " + lover.getName() + " (" + lover.getGender() + ", attracted to " + lover.getAttractedTo() + ")");
+            System.out.println(" | Lover: " + lover.getName() + " (" + lover.getClass().getSimpleName() + ") | Language: " + lover.getLanguage());
             num++;
         }
 
