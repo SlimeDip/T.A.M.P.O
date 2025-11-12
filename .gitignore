@@ -1,4 +1,5 @@
 .env
+.vscode/
 key.txt
 leaderboard.csv
 profiles.txt

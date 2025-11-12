@@ -212,31 +212,24 @@ public class Main {
         switch (personalityChoice) {
             case 1:
                 lover = new Passionate(name, gender, attractedTo, language);
-                personalityType = "Hot";
                 break;
             case 2:
                 lover = new Tsundere(name, gender, attractedTo, language);
-                personalityType = "Tsundere";
                 break;
             case 3:
                 lover = new Deredere(name, gender, attractedTo, language);
-                personalityType = "Deredere";
                 break;
             case 4:
                 lover = new Kuudere(name, gender, attractedTo, language);
-                personalityType = "Kuudere";
                 break;
             case 5:
                 lover = new Chuunibyou(name, gender, attractedTo, language);
-                personalityType = "Chuunibyou";
                 break;
             case 6:
                 lover = new YoungStunna(name, gender, attractedTo, language);
-                personalityType = "Young Stunna";
                 break;
             case 7:
                 lover = new Timid(name, gender, attractedTo, language);
-                personalityType = "Timid";
                 break;
             default:
                 System.out.println("Invalid choice. Choosing Default personality.");
@@ -250,7 +243,7 @@ public class Main {
         GameUtils.saveProfiles(profiles);
 
         System.out.println("\nLover created: " + name + " (" + gender + ", attracted to " + attractedTo + ")");
-        System.out.println("Personality type: " + personalityType);
+        System.out.println("Personality type: " + currentUser.getLover().getClass().getSimpleName());
         System.out.println("\nLover Creation complete! Press Enter to return to menu...");
         input.nextLine();
         GameUtils.clearConsole();
