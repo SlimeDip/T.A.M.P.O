@@ -42,26 +42,30 @@ It’s not about fixing what’s broken, but about finding the right tone to rea
 ## Project Structure
 
 ```bash
-src/
-├─ lover/
-│  ├─ Chuunibyou.java
-│  ├─ Deredere.java
-│  ├─ Hot.java
-│  ├─ Kuudere.java
-│  ├─ Tsundere.java
-│  └─ YoungStunna.java
-├─ main/
-│  ├─ Main.java
-│  ├─ Ai.java
-│  └─ GameUtils.java
-├─ savefile/
-│  └─ README.txt
-└─ util/
-   ├─ Lover.java
-   ├─ Gender.java
-   ├─ Language.java
-   ├─ Message.java
-   └─ User.java
+T.A.M.P.O/
+├─ .gitignore
+├─ README.md
+└─ src/
+   ├─ lover/
+   │  ├─ Chuunibyou.java
+   │  ├─ Deredere.java
+   │  ├─ Kuudere.java
+   │  ├─ Passionate.java
+   │  ├─ Timid.java
+   │  ├─ Tsundere.java
+   │  └─ YoungStunna.java
+   ├─ main/
+   │  ├─ Ai.java
+   │  └─ Main.java
+   ├─ savefile/
+   │  └─ Info.txt
+   └─ util/
+      ├─ GameUtils.java
+      ├─ Gender.java
+      ├─ Language.java
+      ├─ Lover.java
+      ├─ Message.java
+      └─ User.java
 ```
 
 ---
