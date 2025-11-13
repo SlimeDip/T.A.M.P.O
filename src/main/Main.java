@@ -177,14 +177,6 @@ public class Main {
     }
 
     private static void deleteProfile(Scanner input) {
-        if (profiles.isEmpty()) {
-            System.out.println("No profiles to delete.");
-            System.out.println("Press Enter to return to menu...");
-            input.nextLine();
-            GameUtils.clearConsole();
-            return;
-        }
-
         System.out.println("=== Delete Profile ===");
         int num = 1;
         for (User user : profiles) {
