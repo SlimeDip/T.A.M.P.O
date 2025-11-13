@@ -22,7 +22,7 @@ import src.util.*;
 // - Improve AI prompt system (try more personality types)
 
 public class Main {
-    private static final List<User> profiles = new ArrayList<>();
+    private static List<User> profiles = new ArrayList<>();
     private static User currentUser = null;
 
     private static void menu(Scanner input) {
@@ -30,11 +30,10 @@ public class Main {
             System.out.println("=== Suyo Simulator ===");
             System.out.println("Current Profile: " + currentUser.getName());
             System.out.println("1. Start game");
-            System.out.println("2. Create New Profile");
-            System.out.println("3. Select Profile");
-            System.out.println("4. Leaderboard");
-            System.out.println("5. Tutorial");
-            System.out.println("6. Save and Exit");
+            System.out.println("2. Profile Settings");
+            System.out.println("3. Leaderboard");
+            System.out.println("4. Tutorial");
+            System.out.println("5. Save and Exit");
             System.out.print("Enter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
@@ -45,15 +44,12 @@ public class Main {
                     startGame(input);
                     break;
                 case "2":
-                    characterCreation(input);
+                    profileSettings(input);
                     break;
                 case "3":
-                    viewProfiles(input);
-                    break;
-                case "4":
                     viewLeaderboard(input);
                     break;
-                case "5":
+                case "4":
                     System.out.println("=== Tutorial ===");
                     System.out.println("Make up with the AI lover by chatting with them. Make them say 'I love you' to win.");
                     System.out.println("Every message you enter gives you a score.");
@@ -63,7 +59,7 @@ public class Main {
                     input.nextLine();
                     GameUtils.clearConsole();
                     break;
-                case "6":
+                case "5":
                     System.out.println("Exiting the game. Goodbye!");
                     GameUtils.saveProfiles(profiles);
                     System.exit(0);
@@ -128,8 +124,38 @@ public class Main {
         }
     }
 
+    private static void profileSettings(Scanner input) {
+        while (true) {
+            System.out.println("=== Profile Settings ===");
+            System.out.println("Current Profile: " + currentUser.getName());
+            System.out.println("1. Create New Profile");
+            System.out.println("2. Delete Profile");
+            System.out.println("3. Select Profile");
+            System.out.println("Press Enter to Main Menu");
+            System.out.print("Enter your choice: ");
+            String choice = input.nextLine().trim();
+            GameUtils.clearConsole();
+
+            switch (choice) {
+                case "1":
+                    characterCreation(input);
+                    break;
+                case "2":
+                    deleteProfile(input);
+                    break;
+                case "3":
+                    viewProfiles(input);
+                    break;
+                default:
+                    GameUtils.clearConsole();
+                    return;        
+            }
+        }
+    }
+
     private static void characterCreation(Scanner input) {
         System.out.println("=== Character Creation ===");
+
         System.out.print("Enter your name: ");
         String name = input.nextLine().trim();
         if (name.isEmpty()) {
@@ -148,6 +174,80 @@ public class Main {
         User user = new User(name, gender, attractedTo);
         GameUtils.clearConsole();
         loverCreation(input, user);
+    }
+
+    private static void deleteProfile(Scanner input) {
+        if (profiles.isEmpty()) {
+            System.out.println("No profiles to delete.");
+            System.out.println("Press Enter to return to menu...");
+            input.nextLine();
+            GameUtils.clearConsole();
+            return;
+        }
+
+        System.out.println("=== Delete Profile ===");
+        int num = 1;
+        for (User user : profiles) {
+            System.out.println(num + ". " + user.getName());
+            num++;
+        }
+        System.out.println("Press 0 to Cancel");
+
+        System.out.print("Select profile to delete: ");
+        int profileIndex = input.nextInt() - 1;
+        input.nextLine();
+
+        if (profileIndex == -1) {
+            GameUtils.clearConsole();
+            return;
+        }
+
+        if (profileIndex >= 0 && profileIndex < profiles.size()) {
+            User profileToDelete = profiles.get(profileIndex);
+            System.out.println("Are you sure you want to delete '" + profileToDelete.getName() + "'?");
+            System.out.print("Type 'yes' to confirm or 'no' to cancel: ");
+            String confirm = input.nextLine().trim().toLowerCase();
+
+            if (confirm.equals("yes")) {
+                String deletedName = profileToDelete.getName();
+                profiles.remove(profileIndex);
+                GameUtils.saveProfiles(profiles);
+
+                // If deleted profile was current, switch to another
+                if (currentUser.getName().equals(deletedName)) {
+                    if (profiles.isEmpty()) {
+                        System.out.println("Profile '" + deletedName + "' deleted successfully.");
+                        System.out.println("No profiles remaining. Creating new profile...");
+                        System.out.println("Press Enter to continue...");
+                        input.nextLine();
+                        GameUtils.clearConsole();
+                        characterCreation(input);
+                        currentUser = profiles.get(0);
+                    } else {
+                        currentUser = profiles.get(0);
+                        System.out.println("Profile '" + deletedName + "' deleted successfully.");
+                        System.out.println("Switched to profile: " + currentUser.getName());
+                        System.out.println("Press Enter to return to menu...");
+                        input.nextLine();
+                    }
+                } else {
+                    System.out.println("Profile '" + deletedName + "' deleted successfully.");
+                    System.out.println("Press Enter to return to menu...");
+                    input.nextLine();
+                }
+            } 
+            
+            else if (confirm.equals("no")){
+                System.out.println("Deletion cancelled.");
+                System.out.println("Press Enter to return to menu...");
+                input.nextLine();
+            }
+        } else {
+            System.out.println("Invalid profile selection.");
+            System.out.println("Press Enter to return to menu...");
+            input.nextLine();
+        }
+        GameUtils.clearConsole();
     }
 
     private static void loverCreation(Scanner input, User user) {
