@@ -157,7 +157,7 @@ public class Main {
         if (name.isEmpty()) {
             name = "Lover";
         }
-
+        
         System.out.println("\nPick your Lover's Language");
         System.out.println("1. English");
         System.out.println("2. Tagalog");

@@ -177,7 +177,7 @@ public class GameUtils {
                         case "Kuudere":
                             lover = new Kuudere(loverName, loverGender, loverAttracted, language);
                             break;
-                        case "Hot":
+                        case "Passionate":
                             lover = new Passionate(loverName, loverGender, loverAttracted, language);
                             break;
                         case "Chuunibyou":
@@ -185,6 +185,9 @@ public class GameUtils {
                             break;
                         case "YoungStunna":
                             lover = new YoungStunna(loverName, loverGender, loverAttracted, language);
+                            break;
+                        case "Timid":
+                            lover = new Timid(loverName, loverGender, loverAttracted, language);
                             break;  
                         default:
                             // unknown class - skip creating lover
