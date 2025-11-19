@@ -75,7 +75,7 @@ public class Main {
     private static void startGame(Scanner input) {
     Ai ai = new Ai();
     int score = 0;
-    List<String> conversationHistory = new ArrayList<>(); // Store conversation history
+    List<String> conversationHistory = new ArrayList<>(); 
 
     try {
         String prompt = currentUser.getLover().getPrompt();
@@ -87,28 +87,24 @@ public class Main {
         history.add(new Message("system", prompt));
 
         while (true) {
-            // Clear console and show conversation history
             GameUtils.clearConsole();
             
-            // Print conversation history (text only)
+            // Print conversation history
             for (String line : conversationHistory) {
                 System.out.println(line);
             }
-            System.out.println("=" .repeat(50)); // Separator for current exchange
+            System.out.println("=" .repeat(50)); 
             
-            // For lover AI
             String response = ai.aiAnswer(history);
             Emotion emotion = Ai.detectEmotion(response);
-            
-            // Display current AI response with emotion art (ONLY ONCE)
+            // Display current AI response with pixel art
             ConsoleArt.printArtWithDialogue(currentUser.getLover().getName(), response, emotion);
-            
-            // Add to conversation history (text only - DON'T add the same text twice)
+            // Add to conversation history
             conversationHistory.add(currentUser.getLover().getName() + ": " + response);
             
             history.add(new Message("assistant", response));
 
-            // Check if u won - only genuine "I love you" statements
+            // for checking if I love you is geniune since the AI sometimes says "I love you" in a sarcastic way and the user wins
             if (isGenuineILoveYou(response)) {
                 GameUtils.saveScore(currentUser.getName(), score);
                 System.out.println("Congratulations! You've won the lover's heart!");
@@ -119,7 +115,6 @@ public class Main {
                 return;
             }
 
-            // For user input
             System.out.print("\n" + currentUser.getName() + ": ");
             String userMessage = input.nextLine();
             userMessage = userMessage.trim();
@@ -128,7 +123,6 @@ public class Main {
                 GameUtils.clearConsole();
                 break;
             }
-
             if (userMessage.isEmpty()) {
                 history.add(new Message("user", "..."));
                 conversationHistory.add(currentUser.getName() + ": ...");
@@ -145,7 +139,6 @@ public class Main {
 private static boolean isGenuineILoveYou(String response) {
     String lowerResponse = response.toLowerCase();
     
-    // Check for genuine "I love you" - not in quotes or negative context
     return (lowerResponse.contains("i love you") && 
             !lowerResponse.contains("\"i love you\"") &&
             !lowerResponse.contains("'i love you'") &&
@@ -240,7 +233,6 @@ private static boolean isGenuineILoveYou(String response) {
                 profiles.remove(profileIndex);
                 GameUtils.saveProfiles(profiles);
 
-                // If deleted profile was current, switch to another
                 if (currentUser.getName().equals(deletedName)) {
                     if (profiles.isEmpty()) {
                         System.out.println("Profile '" + deletedName + "' deleted successfully.");
