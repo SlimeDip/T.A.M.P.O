@@ -1,6 +1,6 @@
 .env
 .vscode/
 key.txt
-leaderboard.csv
+leaderboard.txt
 profiles.txt
 logs/

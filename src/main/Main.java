@@ -289,38 +289,29 @@ public class Main {
         System.out.println("6. Swagger and attitude (Young Stunna)");
         System.out.println("7. Shy and soft-spoken (Timid)");
         System.out.print("Enter your choice: ");
-        int personalityChoice = 1;
-        String personalityType = "Default";
-
-        try {
-            personalityChoice = input.nextInt();
-            input.nextLine();
-        } catch (Exception e) {
-            System.out.print("Invalid input. Defaulting to 1: ");
-            personalityChoice = 1;
-        }
-
+        String personalityChoice = input.nextLine();
+        
         Lover lover;
         switch (personalityChoice) {
-            case 1:
+            case "1":
                 lover = new Passionate(name, gender, attractedTo, language);
                 break;
-            case 2:
+            case "2":
                 lover = new Tsundere(name, gender, attractedTo, language);
                 break;
-            case 3:
+            case "3":
                 lover = new Deredere(name, gender, attractedTo, language);
                 break;
-            case 4:
+            case "4":
                 lover = new Kuudere(name, gender, attractedTo, language);
                 break;
-            case 5:
+            case "5":
                 lover = new Chuunibyou(name, gender, attractedTo, language);
                 break;
-            case 6:
+            case "6":
                 lover = new YoungStunna(name, gender, attractedTo, language);
                 break;
-            case 7:
+            case "7":
                 lover = new Timid(name, gender, attractedTo, language);
                 break;
             default:
