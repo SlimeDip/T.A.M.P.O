@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Scanner;
 import src.lover.*;
 import src.util.*;
+import src.display.ConsoleArt;
+import src.display.ConsoleArt.Emotion;
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
@@ -22,7 +24,7 @@ import src.util.*;
 // - Improve AI prompt system (try more personality types)
 
 public class Main {
-    private static final List<User> profiles = new ArrayList<>();
+    private static List<User> profiles = new ArrayList<>();
     private static User currentUser = null;
 
     private static void menu(Scanner input) {
@@ -30,11 +32,10 @@ public class Main {
             System.out.println("=== Suyo Simulator ===");
             System.out.println("Current Profile: " + currentUser.getName());
             System.out.println("1. Start game");
-            System.out.println("2. Create New Profile");
-            System.out.println("3. Select Profile");
-            System.out.println("4. Leaderboard");
-            System.out.println("5. Tutorial");
-            System.out.println("6. Save and Exit");
+            System.out.println("2. Profile Settings");
+            System.out.println("3. Leaderboard");
+            System.out.println("4. Tutorial");
+            System.out.println("5. Save and Exit");
             System.out.print("Enter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
@@ -45,15 +46,12 @@ public class Main {
                     startGame(input);
                     break;
                 case "2":
-                    characterCreation(input);
+                    profileSettings(input);
                     break;
                 case "3":
-                    viewProfiles(input);
-                    break;
-                case "4":
                     viewLeaderboard(input);
                     break;
-                case "5":
+                case "4":
                     System.out.println("=== Tutorial ===");
                     System.out.println("Make up with the AI lover by chatting with them. Make them say 'I love you' to win.");
                     System.out.println("Every message you enter gives you a score.");
@@ -63,7 +61,7 @@ public class Main {
                     input.nextLine();
                     GameUtils.clearConsole();
                     break;
-                case "6":
+                case "5":
                     System.out.println("Exiting the game. Goodbye!");
                     GameUtils.saveProfiles(profiles);
                     System.exit(0);
@@ -75,61 +73,124 @@ public class Main {
     }
 
     private static void startGame(Scanner input) {
-        Ai ai = new Ai();
-        int score = 0;
+    Ai ai = new Ai();
+    int score = 0;
+    List<String> conversationHistory = new ArrayList<>(); // Store conversation history
 
-        try {
-            String prompt = currentUser.getLover().getPrompt();
-            System.out.println("Language: " + currentUser.getLover().getLanguage().toString());
-            System.out.println("Personality: " + currentUser.getLover().getClass().getSimpleName());
-            System.out.println("\n=== Game Start ===\n");
+    try {
+        String prompt = currentUser.getLover().getPrompt();
+        System.out.println("Language: " + currentUser.getLover().getLanguage().toString());
+        System.out.println("Personality: " + currentUser.getLover().getClass().getSimpleName());
+        System.out.println("\n=== Game Start ===\n");
 
-            List<Message> history = new ArrayList<>();
-            history.add(new Message("system", prompt));
+        List<Message> history = new ArrayList<>();
+        history.add(new Message("system", prompt));
 
-            while (true) {
-                // For lover AI
-                String response = ai.aiAnswer(history);
-                System.out.println(currentUser.getLover().getName() + ": " + response);
-                history.add(new Message("assistant", response));
-                System.out.println();
-
-                // Check if u won
-                if (response.toLowerCase().contains("i love you")) {
-                    GameUtils.saveScore(currentUser.getName(), score);
-                    System.out.println("Congratulations! You've won the lover's heart!");
-                    System.out.println("Score: " + score);
-                    System.out.println("\nPress Enter to return to the menu...");
-                    input.nextLine();
-                    GameUtils.clearConsole();
-                    return;
-                }
-
-                // For user input
-                System.out.print(currentUser.getName() + ": ");
-                String userMessage = input.nextLine();
-                userMessage = userMessage.trim();
-                score++;
-                if (userMessage.equalsIgnoreCase("exit")) {
-                    GameUtils.clearConsole();
-                    break;
-                }
-
-                if (userMessage.isEmpty()) {
-                    history.add(new Message("user", "..."));
-                    System.out.println();
-                } else {
-                    history.add(new Message("user", userMessage));
-                    System.out.println();
-                }
+        while (true) {
+            // Clear console and show conversation history
+            GameUtils.clearConsole();
+            
+            // Print conversation history (text only)
+            for (String line : conversationHistory) {
+                System.out.println(line);
             }
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("=" .repeat(50)); // Separator for current exchange
+            
+            // For lover AI
+            String response = ai.aiAnswer(history);
+            Emotion emotion = Ai.detectEmotion(response);
+            
+            // Display current AI response with emotion art (ONLY ONCE)
+            ConsoleArt.printArtWithDialogue(currentUser.getLover().getName(), response, emotion);
+            
+            // Add to conversation history (text only - DON'T add the same text twice)
+            conversationHistory.add(currentUser.getLover().getName() + ": " + response);
+            
+            history.add(new Message("assistant", response));
+
+            // Check if u won - only genuine "I love you" statements
+            if (isGenuineILoveYou(response)) {
+                GameUtils.saveScore(currentUser.getName(), score);
+                System.out.println("Congratulations! You've won the lover's heart!");
+                System.out.println("Score: " + score);
+                System.out.println("\nPress Enter to return to the menu...");
+                input.nextLine();
+                GameUtils.clearConsole();
+                return;
+            }
+
+            // For user input
+            System.out.print("\n" + currentUser.getName() + ": ");
+            String userMessage = input.nextLine();
+            userMessage = userMessage.trim();
+            score++;
+            if (userMessage.equalsIgnoreCase("exit")) {
+                GameUtils.clearConsole();
+                break;
+            }
+
+            if (userMessage.isEmpty()) {
+                history.add(new Message("user", "..."));
+                conversationHistory.add(currentUser.getName() + ": ...");
+            } else {
+                history.add(new Message("user", userMessage));
+                conversationHistory.add(currentUser.getName() + ": " + userMessage);
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("Error: " + e.getMessage());
+    }
+}
+
+private static boolean isGenuineILoveYou(String response) {
+    String lowerResponse = response.toLowerCase();
+    
+    // Check for genuine "I love you" - not in quotes or negative context
+    return (lowerResponse.contains("i love you") && 
+            !lowerResponse.contains("\"i love you\"") &&
+            !lowerResponse.contains("'i love you'") &&
+            !lowerResponse.contains("simple i love you") &&
+            !lowerResponse.contains("just i love you") &&
+            !lowerResponse.contains("think i love you") &&
+            !lowerResponse.contains("say i love you") &&
+            !lowerResponse.matches(".*you think.*i love you.*") &&
+            !lowerResponse.matches(".*a[n]? i love you.*") &&
+            !lowerResponse.contains("i love you?") && // Question form
+            !lowerResponse.contains("i love you!"));  // Angry exclamation
+}
+
+    private static void profileSettings(Scanner input) {
+        while (true) {
+            System.out.println("=== Profile Settings ===");
+            System.out.println("Current Profile: " + currentUser.getName());
+            System.out.println("1. Create New Profile");
+            System.out.println("2. Delete Profile");
+            System.out.println("3. Select Profile");
+            System.out.println("Press Enter to Main Menu");
+            System.out.print("Enter your choice: ");
+            String choice = input.nextLine().trim();
+            GameUtils.clearConsole();
+
+            switch (choice) {
+                case "1":
+                    characterCreation(input);
+                    break;
+                case "2":
+                    deleteProfile(input);
+                    break;
+                case "3":
+                    viewProfiles(input);
+                    break;
+                default:
+                    GameUtils.clearConsole();
+                    return;        
+            }
         }
     }
 
     private static void characterCreation(Scanner input) {
         System.out.println("=== Character Creation ===");
+
         System.out.print("Enter your name: ");
         String name = input.nextLine().trim();
         if (name.isEmpty()) {
@@ -148,6 +209,72 @@ public class Main {
         User user = new User(name, gender, attractedTo);
         GameUtils.clearConsole();
         loverCreation(input, user);
+    }
+
+    private static void deleteProfile(Scanner input) {
+        System.out.println("=== Delete Profile ===");
+        int num = 1;
+        for (User user : profiles) {
+            System.out.println(num + ". " + user.getName());
+            num++;
+        }
+        System.out.println("Press 0 to Cancel");
+
+        System.out.print("Select profile to delete: ");
+        int profileIndex = input.nextInt() - 1;
+        input.nextLine();
+
+        if (profileIndex == -1) {
+            GameUtils.clearConsole();
+            return;
+        }
+
+        if (profileIndex >= 0 && profileIndex < profiles.size()) {
+            User profileToDelete = profiles.get(profileIndex);
+            System.out.println("Are you sure you want to delete '" + profileToDelete.getName() + "'?");
+            System.out.print("Type 'yes' to confirm or 'no' to cancel: ");
+            String confirm = input.nextLine().trim().toLowerCase();
+
+            if (confirm.equals("yes")) {
+                String deletedName = profileToDelete.getName();
+                profiles.remove(profileIndex);
+                GameUtils.saveProfiles(profiles);
+
+                // If deleted profile was current, switch to another
+                if (currentUser.getName().equals(deletedName)) {
+                    if (profiles.isEmpty()) {
+                        System.out.println("Profile '" + deletedName + "' deleted successfully.");
+                        System.out.println("No profiles remaining. Creating new profile...");
+                        System.out.println("Press Enter to continue...");
+                        input.nextLine();
+                        GameUtils.clearConsole();
+                        characterCreation(input);
+                        currentUser = profiles.get(0);
+                    } else {
+                        currentUser = profiles.get(0);
+                        System.out.println("Profile '" + deletedName + "' deleted successfully.");
+                        System.out.println("Switched to profile: " + currentUser.getName());
+                        System.out.println("Press Enter to return to menu...");
+                        input.nextLine();
+                    }
+                } else {
+                    System.out.println("Profile '" + deletedName + "' deleted successfully.");
+                    System.out.println("Press Enter to return to menu...");
+                    input.nextLine();
+                }
+            } 
+            
+            else if (confirm.equals("no")){
+                System.out.println("Deletion cancelled.");
+                System.out.println("Press Enter to return to menu...");
+                input.nextLine();
+            }
+        } else {
+            System.out.println("Invalid profile selection.");
+            System.out.println("Press Enter to return to menu...");
+            input.nextLine();
+        }
+        GameUtils.clearConsole();
     }
 
     private static void loverCreation(Scanner input, User user) {
@@ -197,38 +324,29 @@ public class Main {
         System.out.println("6. Swagger and attitude (Young Stunna)");
         System.out.println("7. Shy and soft-spoken (Timid)");
         System.out.print("Enter your choice: ");
-        int personalityChoice = 1;
-        String personalityType = "Default";
-
-        try {
-            personalityChoice = input.nextInt();
-            input.nextLine();
-        } catch (Exception e) {
-            System.out.print("Invalid input. Defaulting to 1: ");
-            personalityChoice = 1;
-        }
-
+        String personalityChoice = input.nextLine();
+        
         Lover lover;
         switch (personalityChoice) {
-            case 1:
+            case "1":
                 lover = new Passionate(name, gender, attractedTo, language);
                 break;
-            case 2:
+            case "2":
                 lover = new Tsundere(name, gender, attractedTo, language);
                 break;
-            case 3:
+            case "3":
                 lover = new Deredere(name, gender, attractedTo, language);
                 break;
-            case 4:
+            case "4":
                 lover = new Kuudere(name, gender, attractedTo, language);
                 break;
-            case 5:
+            case "5":
                 lover = new Chuunibyou(name, gender, attractedTo, language);
                 break;
-            case 6:
+            case "6":
                 lover = new YoungStunna(name, gender, attractedTo, language);
                 break;
-            case 7:
+            case "7":
                 lover = new Timid(name, gender, attractedTo, language);
                 break;
             default:
