@@ -181,6 +181,35 @@ private static boolean isGenuineILoveYou(String response) {
         }
     }
 
+    private static void profileSettings(Scanner input) {
+        while (true) {
+            System.out.println("=== Profile Settings ===");
+            System.out.println("Current Profile: " + currentUser.getName());
+            System.out.println("1. Create New Profile");
+            System.out.println("2. Delete Profile");
+            System.out.println("3. Select Profile");
+            System.out.println("Press Enter to Main Menu");
+            System.out.print("Enter your choice: ");
+            String choice = input.nextLine().trim();
+            GameUtils.clearConsole();
+
+            switch (choice) {
+                case "1":
+                    characterCreation(input);
+                    break;
+                case "2":
+                    deleteProfile(input);
+                    break;
+                case "3":
+                    viewProfiles(input);
+                    break;
+                default:
+                    GameUtils.clearConsole();
+                    return;        
+            }
+        }
+    }
+
     private static void characterCreation(Scanner input) {
         System.out.println("=== Character Creation ===");
 

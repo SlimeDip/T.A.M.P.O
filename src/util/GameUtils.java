@@ -12,7 +12,7 @@ import src.lover.*;
 
 public class GameUtils {
     public static void saveScore(String username, int score) {
-        Path p = Path.of("src/savefile/leaderboard.csv");
+        Path p = Path.of("src/savefile/leaderboard.txt");
         
         String safeName = username == null ? "User" : username.replaceAll("[\\r\\n,]+", " ");
         String entry = String.format("%s,%d%s", safeName, score, System.lineSeparator());
@@ -40,7 +40,7 @@ public class GameUtils {
     }
 
     public static List<Integer> loadScores() {
-        Path p = Path.of("src/savefile/leaderboard.csv");
+        Path p = Path.of("src/savefile/leaderboard.txt");
         List<Integer> scores = new ArrayList<>();
         if (!Files.exists(p)) {
             return scores;
@@ -69,7 +69,7 @@ public class GameUtils {
     }
 
     public static List<ScoreEntry> loadLeaderboard() {
-        Path p = Path.of("src/savefile/leaderboard.csv");
+        Path p = Path.of("src/savefile/leaderboard.txt");
         List<ScoreEntry> entries = new ArrayList<>();
         if (!Files.exists(p)) {
             return entries;
