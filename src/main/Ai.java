@@ -7,10 +7,9 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.List;
 import src.util.Message;
+import src.display.ConsoleArt.Emotion;
 
 public class Ai {
-    // Sorry, will release the key once the game is finished
-    // Groq keeps locking the keys after leaking it lol
     private static final String API_KEY = "";
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -24,6 +23,65 @@ public class Ai {
                 .replace("\n", "\\n")
                 .replace("\r", "\\r");
     }
+
+  // To detect the emotion for the pixel art faces
+public static Emotion detectEmotion(String response) {
+    if (response == null || response.trim().isEmpty()) {
+        return Emotion.NEUTRAL;
+    }
+    
+    String lowerResponse = response.toLowerCase();
+    
+    // Check if "i love you" appears in a positive context, not in quotes or like sarcasm type of way
+    if ((lowerResponse.contains("i love you") && 
+         !lowerResponse.contains("\"i love you\"") &&
+         !lowerResponse.contains("'i love you'") &&
+         !lowerResponse.contains("simple i love you") &&
+         !lowerResponse.contains("just i love you") &&
+         !lowerResponse.contains("think i love you") &&
+         !lowerResponse.contains("say i love you") &&
+         !lowerResponse.matches(".*you think.*i love you.*") &&
+         !lowerResponse.matches(".*a[n]? i love you.*")) ||
+        lowerResponse.contains("i really love you") ||
+        lowerResponse.contains("i truly love you")) {
+        return Emotion.HAPPY;
+    }
+    //keywords in the responses of the AI that indicate different emotions
+    if (lowerResponse.contains("disappointed") || 
+        lowerResponse.contains("disappointing") ||
+        lowerResponse.contains("distract") ||
+        lowerResponse.contains("think") ||
+        lowerResponse.contains("Save it") ||
+        lowerResponse.contains("won't fix") ||
+        lowerResponse.contains("let down")) {
+        return Emotion.DISAPPOINTED;
+    }
+    
+    if (lowerResponse.contains("hate") || 
+        lowerResponse.contains("despise") ||
+        lowerResponse.contains("angry") ||
+        lowerResponse.contains("mad") ||
+        lowerResponse.contains("stop") ||
+        lowerResponse.contains("nothing") ||
+        lowerResponse.contains("furious")) {
+        return Emotion.ANGRY;
+    }
+    
+    if (lowerResponse.contains("hmph") || 
+        lowerResponse.contains("whatever") ||
+        lowerResponse.contains("talking") ||
+        lowerResponse.contains("not talking") ||
+        lowerResponse.contains("late") ||
+        lowerResponse.contains("cheap") ||
+        lowerResponse.contains("prove") ||
+        lowerResponse.contains("fine") ||
+        lowerResponse.contains("leave me alone")) {
+        return Math.random() > 0.5 ? Emotion.POUTING : Emotion.POUTING2;
+    }
+    
+    // Default to neutral if there are no keywords detected
+    return Emotion.NEUTRAL;
+}
 
     // Core of the AI
     public String aiAnswer(List<Message> history) throws Exception {
@@ -39,7 +97,6 @@ public class Ai {
             messagesJson.setLength(messagesJson.length() - 1);
         }
 
-        // Change temperature (closer to 1) kung gusto nyo na mas creative sagot jowa nyo
         String requestBody = String.format("""
             {
                 "model": "llama-3.3-70b-versatile",
@@ -58,6 +115,10 @@ public class Ai {
                 .build();
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        
+        if (response.statusCode() != 200) {
+            throw new Exception("API request failed with status: " + response.statusCode() + " - " + response.body());
+        }
         
         return aiExtract(response.body());
     }
