@@ -94,18 +94,17 @@ public class Main {
             }
             System.out.println("=" .repeat(50)); 
             
-            Ai.ChatResponse ra = Ai.chatWithAnalysis(history);
-            String response = ra.content;
-            Emotion emotion = ra.mood;
+            Ai.ChatResponse ai = Ai.chatWithAnalysis(history);
+            String response = ai.content;
+            Emotion emotion = ai.mood;
             // Display current AI response with pixel art
             ConsoleArt.printArtWithDialogue(currentUser.getLover().getName(), response, emotion);
 
             // Add to conversation history
             conversationHistory.add(currentUser.getLover().getName() + ": " + response);
-        
             history.add(new Message("assistant", response));
 
-            if (ra.forgiven) {
+            if (ai.forgiven) {
                 GameUtils.saveScore(currentUser.getName(), score);
                 System.out.println("Congratulations! You've won the lover's heart!");
                 System.out.println("Score: " + score);
