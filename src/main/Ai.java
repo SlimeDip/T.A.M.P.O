@@ -23,6 +23,7 @@ public class Ai {
             Output the JSON on its own line after the reply.
             """;
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    private static final boolean DEBUG = false;
 
     public static class ChatResponse {
         public final String content;
@@ -42,17 +43,19 @@ public class Ai {
 
         String rawResponse = sendChatRequest(augmentedHistory).trim();
 
-        // Debug: print the raw response
-        //for (Message message : augmentedHistory) {
-            //System.out.println(message.getRole() + ": " + message.getContent());
-        //}
-        // System.out.println("Raw AI Response: " + rawResponse);
+        if (DEBUG) {
+            System.out.println("Full Raw Response: " + rawResponse);
+        }
 
         rawResponse = extractContent(rawResponse);
         return parseChatResponse(rawResponse);
     }
 
     private static String sendChatRequest(List<Message> history) throws Exception {
+        if (API_KEY.isEmpty()) {
+            throw new Exception("Game wont work without API key. We kept it hidden for now so stay tuned!\n\n");
+        }
+
         String requestBody = String.format("""
                 {
                     "model": "%s",
