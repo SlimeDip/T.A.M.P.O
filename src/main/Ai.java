@@ -22,8 +22,9 @@ public class Ai {
             - forgiven must be true or false (boolean)
             Output the JSON on its own line after the reply.
             """;
+    private static final int MAX_HISTORY_MESSAGES = 3;
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static class ChatResponse {
         public final String content;
@@ -38,10 +39,9 @@ public class Ai {
     }
 
     public static ChatResponse chatWithAnalysis(List<Message> history) throws Exception {
-        List<Message> augmentedHistory = new ArrayList<>(history);
-        augmentedHistory.add(new Message("system", ANALYSIS_PROMPT));
+        List<Message> prepared = prepareHistory(history);
 
-        String rawResponse = sendChatRequest(augmentedHistory).trim();
+        String rawResponse = sendChatRequest(prepared).trim();
 
         if (DEBUG) {
             System.out.println("Full Raw Response: " + rawResponse);
@@ -49,6 +49,41 @@ public class Ai {
 
         rawResponse = extractContent(rawResponse);
         return parseChatResponse(rawResponse);
+    }
+
+    private static List<Message> prepareHistory(List<Message> history) {
+        List<Message> out = new ArrayList<>();
+        if (history == null || history.isEmpty()) {
+            out.add(new Message("system", ANALYSIS_PROMPT));
+            return out;
+        }
+
+        Message lastSystem = null;
+        boolean analysisPresent = false;
+        List<Message> others = new ArrayList<>();
+
+        for (Message m : history) {
+            if ("system".equals(m.getRole())) {
+                String content = m.getContent();
+                if (content != null && content.equals(ANALYSIS_PROMPT)) {
+                    analysisPresent = true;
+                } else {
+                    lastSystem = m;
+                }
+            } else {
+                others.add(m);
+            }
+        }
+
+        if (lastSystem != null) out.add(lastSystem);
+        if (!analysisPresent) out.add(new Message("system", ANALYSIS_PROMPT));
+
+        int start = Math.max(0, others.size() - MAX_HISTORY_MESSAGES);
+        for (int i = start; i < others.size(); i++) {
+            out.add(others.get(i));
+        }
+
+        return out;
     }
 
     private static String sendChatRequest(List<Message> history) throws Exception {
