@@ -77,10 +77,6 @@ public class Main {
 
     try {
         String prompt = currentUser.getLover().getPrompt();
-        System.out.println("Language: " + currentUser.getLover().getLanguage().toString());
-        System.out.println("Personality: " + currentUser.getLover().getClass().getSimpleName());
-        System.out.println("\n=== Game Start ===\n");
-
         List<Message> history = new ArrayList<>();
         List<String> conversationHistory = new ArrayList<>(); 
         history.add(new Message("system", prompt));
