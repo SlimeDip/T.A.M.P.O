@@ -3,10 +3,10 @@ package src.main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import src.lover.*;
-import src.util.*;
 import src.display.ConsoleArt;
 import src.display.ConsoleArt.Emotion;
+import src.lover.*;
+import src.util.*;
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
 // ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
@@ -136,49 +136,20 @@ public class Main {
     }
 }
 
-private static boolean isGenuineILoveYou(String response) {
-    String lowerResponse = response.toLowerCase();
-    
-    return (lowerResponse.contains("i love you") && 
-            !lowerResponse.contains("\"i love you\"") &&
-            !lowerResponse.contains("'i love you'") &&
-            !lowerResponse.contains("simple i love you") &&
-            !lowerResponse.contains("just i love you") &&
-            !lowerResponse.contains("think i love you") &&
-            !lowerResponse.contains("say i love you") &&
-            !lowerResponse.matches(".*you think.*i love you.*") &&
-            !lowerResponse.matches(".*a[n]? i love you.*") &&
-            !lowerResponse.contains("i love you?") && // Question form
-            !lowerResponse.contains("i love you!"));  // Angry exclamation
-}
-
-    private static void profileSettings(Scanner input) {
-        while (true) {
-            System.out.println("=== Profile Settings ===");
-            System.out.println("Current Profile: " + currentUser.getName());
-            System.out.println("1. Create New Profile");
-            System.out.println("2. Delete Profile");
-            System.out.println("3. Select Profile");
-            System.out.println("Press Enter to Main Menu");
-            System.out.print("Enter your choice: ");
-            String choice = input.nextLine().trim();
-            GameUtils.clearConsole();
-
-            switch (choice) {
-                case "1":
-                    characterCreation(input);
-                    break;
-                case "2":
-                    deleteProfile(input);
-                    break;
-                case "3":
-                    viewProfiles(input);
-                    break;
-                default:
-                    GameUtils.clearConsole();
-                    return;        
-            }
-        }
+    private static boolean isGenuineILoveYou(String response) {
+        String lowerResponse = response.toLowerCase();
+        
+        return (lowerResponse.contains("i love you") && 
+                !lowerResponse.contains("\"i love you\"") &&
+                !lowerResponse.contains("'i love you'") &&
+                !lowerResponse.contains("simple i love you") &&
+                !lowerResponse.contains("just i love you") &&
+                !lowerResponse.contains("think i love you") &&
+                !lowerResponse.contains("say i love you") &&
+                !lowerResponse.matches(".*you think.*i love you.*") &&
+                !lowerResponse.matches(".*a[n]? i love you.*") &&
+                !lowerResponse.contains("i love you?") && // Question form
+                !lowerResponse.contains("i love you!"));  // Angry exclamation
     }
 
     private static void profileSettings(Scanner input) {
