@@ -9,7 +9,7 @@ import src.lover.*;
 import src.util.*;
 
 // DEVELOPMENT GUIDE BY URS TRULY DIP:
-// ai.aiAnswer(List<Message> history) -> Nagbibigay ng history then return AI response
+// Ai.chatWithAnalysis(List<Message> history) -> returns assistant reply + analysis
 // (variable) profiles -> List of User profiles
 // (variable) currentUser -> The currently selected User profile
 // lover folder -> Contains Lover classes with different personalities
@@ -36,7 +36,7 @@ public class Main {
             System.out.println("3. Leaderboard");
             System.out.println("4. Tutorial");
             System.out.println("5. Save and Exit");
-            System.out.print("Enter your choice: ");
+            System.out.print("\nEnter your choice: ");
             String choice = input.nextLine();
             choice = choice.trim();
             GameUtils.clearConsole();
@@ -73,9 +73,7 @@ public class Main {
     }
 
     private static void startGame(Scanner input) {
-    Ai ai = new Ai();
     int score = 0;
-    List<String> conversationHistory = new ArrayList<>(); 
 
     try {
         String prompt = currentUser.getLover().getPrompt();
@@ -84,6 +82,7 @@ public class Main {
         System.out.println("\n=== Game Start ===\n");
 
         List<Message> history = new ArrayList<>();
+        List<String> conversationHistory = new ArrayList<>(); 
         history.add(new Message("system", prompt));
 
         while (true) {
@@ -95,17 +94,18 @@ public class Main {
             }
             System.out.println("=" .repeat(50)); 
             
-            String response = ai.aiAnswer(history);
-            Emotion emotion = Ai.detectEmotion(response);
+            Ai.ChatResponse ra = Ai.chatWithAnalysis(history);
+            String response = ra.content;
+            Emotion emotion = ra.mood;
             // Display current AI response with pixel art
             ConsoleArt.printArtWithDialogue(currentUser.getLover().getName(), response, emotion);
+
             // Add to conversation history
             conversationHistory.add(currentUser.getLover().getName() + ": " + response);
-            
+        
             history.add(new Message("assistant", response));
 
-            // for checking if I love you is geniune since the AI sometimes says "I love you" in a sarcastic way and the user wins
-            if (isGenuineILoveYou(response)) {
+            if (ra.forgiven) {
                 GameUtils.saveScore(currentUser.getName(), score);
                 System.out.println("Congratulations! You've won the lover's heart!");
                 System.out.println("Score: " + score);
@@ -119,10 +119,12 @@ public class Main {
             String userMessage = input.nextLine();
             userMessage = userMessage.trim();
             score++;
+
             if (userMessage.equalsIgnoreCase("exit")) {
                 GameUtils.clearConsole();
                 break;
             }
+
             if (userMessage.isEmpty()) {
                 history.add(new Message("user", "..."));
                 conversationHistory.add(currentUser.getName() + ": ...");
@@ -136,22 +138,6 @@ public class Main {
     }
 }
 
-    private static boolean isGenuineILoveYou(String response) {
-        String lowerResponse = response.toLowerCase();
-        
-        return (lowerResponse.contains("i love you") && 
-                !lowerResponse.contains("\"i love you\"") &&
-                !lowerResponse.contains("'i love you'") &&
-                !lowerResponse.contains("simple i love you") &&
-                !lowerResponse.contains("just i love you") &&
-                !lowerResponse.contains("think i love you") &&
-                !lowerResponse.contains("say i love you") &&
-                !lowerResponse.matches(".*you think.*i love you.*") &&
-                !lowerResponse.matches(".*a[n]? i love you.*") &&
-                !lowerResponse.contains("i love you?") && // Question form
-                !lowerResponse.contains("i love you!"));  // Angry exclamation
-    }
-
     private static void profileSettings(Scanner input) {
         while (true) {
             System.out.println("=== Profile Settings ===");
@@ -159,7 +145,7 @@ public class Main {
             System.out.println("1. Create New Profile");
             System.out.println("2. Delete Profile");
             System.out.println("3. Select Profile");
-            System.out.println("Press Enter to Main Menu");
+            System.out.println("\nPress Enter to Main Menu");
             System.out.print("Enter your choice: ");
             String choice = input.nextLine().trim();
             GameUtils.clearConsole();

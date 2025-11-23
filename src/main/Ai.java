@@ -6,14 +6,26 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.List;
-import src.util.Message;
 import src.display.ConsoleArt.Emotion;
+import src.util.Message;
 
 public class Ai {
     private static final String API_KEY = "";
     private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
-    private static String escapeJson(String s) {
+    public static class ChatResponse {
+        public final String content;
+        public final Emotion mood;
+        public final boolean forgiven;
+
+        public ChatResponse(String content, Emotion mood, boolean forgiven) {
+            this.content = content;
+            this.mood = mood;
+            this.forgiven = forgiven;
+        }
+    }
+
+    private static String escapeJsonString(String s) {
         if (s == null) {
             return "";
         }
@@ -24,72 +36,13 @@ public class Ai {
                 .replace("\r", "\\r");
     }
 
-  // To detect the emotion for the pixel art faces
-public static Emotion detectEmotion(String response) {
-    if (response == null || response.trim().isEmpty()) {
-        return Emotion.NEUTRAL;
-    }
-    
-    String lowerResponse = response.toLowerCase();
-    
-    // Check if "i love you" appears in a positive context, not in quotes or like sarcasm type of way
-    if ((lowerResponse.contains("i love you") && 
-         !lowerResponse.contains("\"i love you\"") &&
-         !lowerResponse.contains("'i love you'") &&
-         !lowerResponse.contains("simple i love you") &&
-         !lowerResponse.contains("just i love you") &&
-         !lowerResponse.contains("think i love you") &&
-         !lowerResponse.contains("say i love you") &&
-         !lowerResponse.matches(".*you think.*i love you.*") &&
-         !lowerResponse.matches(".*a[n]? i love you.*")) ||
-        lowerResponse.contains("i really love you") ||
-        lowerResponse.contains("i truly love you")) {
-        return Emotion.HAPPY;
-    }
-    //keywords in the responses of the AI that indicate different emotions
-    if (lowerResponse.contains("disappointed") || 
-        lowerResponse.contains("disappointing") ||
-        lowerResponse.contains("distract") ||
-        lowerResponse.contains("think") ||
-        lowerResponse.contains("Save it") ||
-        lowerResponse.contains("won't fix") ||
-        lowerResponse.contains("let down")) {
-        return Emotion.DISAPPOINTED;
-    }
-    
-    if (lowerResponse.contains("hate") || 
-        lowerResponse.contains("despise") ||
-        lowerResponse.contains("angry") ||
-        lowerResponse.contains("mad") ||
-        lowerResponse.contains("stop") ||
-        lowerResponse.contains("nothing") ||
-        lowerResponse.contains("furious")) {
-        return Emotion.ANGRY;
-    }
-    
-    if (lowerResponse.contains("hmph") || 
-        lowerResponse.contains("whatever") ||
-        lowerResponse.contains("talking") ||
-        lowerResponse.contains("not talking") ||
-        lowerResponse.contains("late") ||
-        lowerResponse.contains("cheap") ||
-        lowerResponse.contains("prove") ||
-        lowerResponse.contains("fine") ||
-        lowerResponse.contains("leave me alone")) {
-        return Math.random() > 0.5 ? Emotion.POUTING : Emotion.POUTING2;
-    }
-    
-    // Default to neutral if there are no keywords detected
-    return Emotion.NEUTRAL;
-}
-
-    // Core of the AI
-    public String aiAnswer(List<Message> history) throws Exception {
+    // Core of the AI (low-level HTTP request)
+    private static String sendChatRequest(List<Message> history) throws Exception {
         StringBuilder messagesJson = new StringBuilder();
         for (Message m : history) {
             messagesJson.append("{\"role\":\"")
                         .append(m.getRole()).append("\",\"content\":\"")
-                        .append(escapeJson(m.getContent()))
+                        .append(escapeJsonString(m.getContent()))
                         .append("\"},");
         }
 
@@ -120,11 +73,69 @@ public static Emotion detectEmotion(String response) {
             throw new Exception("API request failed with status: " + response.statusCode() + " - " + response.body());
         }
         
-        return aiExtract(response.body());
+        return extractContent(response.body());
+    }
+
+    // AI response for mood, forgiveness, and content
+    public static ChatResponse chatWithAnalysis(List<Message> history) throws Exception {
+        List<Message> ans = new java.util.ArrayList<>(history);
+        ans.add(new Message("user", """
+            After you produce your normal assistant reply, on a new line ONLY output a JSON object
+            exactly in this format with no extra text:
+            {"mood":"HAPPY","forgiven":true}
+            - mood must be one of: HAPPY, DISAPPOINTED, ANGRY, POUTING, NEUTRAL
+            - forgiven must be true or false (boolean)
+            Output the JSON on its own line after the reply.
+            """));
+
+        String full = sendChatRequest(ans).trim();
+
+        int jsonIdx = full.indexOf("{\"mood\"");
+        String content = full;
+        String jsonPart = null;
+        if (jsonIdx != -1) {
+            content = full.substring(0, jsonIdx).trim();
+            jsonPart = full.substring(jsonIdx).trim();
+        }
+
+        // default values
+        Emotion mood = Emotion.NEUTRAL;
+        boolean forgiven = false;
+
+        // parse the JSON part
+        if (jsonPart != null) {
+            String up = jsonPart.replaceAll("\\s+", "");
+            int mIdx = up.indexOf("\"mood\":\"");
+            if (mIdx != -1) {
+                int start = mIdx + 8;
+                int end = up.indexOf("\"", start);
+                if (end != -1) {
+                    String moodStr = up.substring(start, end).toUpperCase();
+                    switch (moodStr) {
+                        case "HAPPY": mood = Emotion.HAPPY; break;
+                        case "DISAPPOINTED": mood = Emotion.DISAPPOINTED; break;
+                        case "ANGRY": mood = Emotion.ANGRY; break;
+                        case "POUTING": mood = Emotion.POUTING; break;
+                        default: mood = Emotion.NEUTRAL; break;
+                    }
+                }
+            }
+
+            int fIdx = up.indexOf("\"forgiven\":");
+            if (fIdx != -1) {
+                int start = fIdx + 11;
+                int end = start;
+                while (end < up.length() && (Character.isLetter(up.charAt(end)) || up.charAt(end) == 't' || up.charAt(end) == 'f')) end++;
+                String val = up.substring(start, Math.min(end, up.length())).replaceAll("[,}]", "");
+                forgiven = val.startsWith("true");
+            }
+        }
+
+        return new ChatResponse(content, mood, forgiven);
     }
 
     // Para makuha yung content lang mula sa JSON
-    private static String aiExtract(String json) {
+    private static String extractContent(String json) {
         if (json == null) {
             return "";
         }
