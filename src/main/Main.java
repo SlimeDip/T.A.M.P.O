@@ -3,7 +3,6 @@ package src.main;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import src.display.ConsoleArt;
 import src.display.ConsoleArt.Emotion;
 import src.lover.*;
 import src.util.*;
@@ -93,9 +92,10 @@ public class Main {
             Ai.ChatResponse ai = Ai.chatWithAnalysis(history);
             String response = ai.content;
             Emotion emotion = ai.mood;
-            // Display current AI response with pixel art
-            ConsoleArt.printArtWithDialogue(currentUser.getLover().getName(), response, emotion);
 
+            // Display lover with emotion and art
+            currentUser.getLover().displayWithEmotion(response, emotion);
+            
             // Add to conversation history
             conversationHistory.add(currentUser.getLover().getName() + ": " + response);
             history.add(new Message("assistant", response));
