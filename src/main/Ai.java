@@ -24,7 +24,7 @@ public class Ai {
             """;
     private static final int MAX_HISTORY_MESSAGES = 8;
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     public static class ChatResponse {
         public final String content;
