@@ -22,7 +22,7 @@ public class Ai {
             - forgiven must be true or false (boolean)
             Output the JSON on its own line after the reply.
             """;
-    private static final int MAX_HISTORY_MESSAGES = 3;
+    private static final int MAX_HISTORY_MESSAGES = 8;
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
     private static final boolean DEBUG = true;
 
