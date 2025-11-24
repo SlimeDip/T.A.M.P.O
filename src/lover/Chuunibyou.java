@@ -229,8 +229,8 @@ public class Chuunibyou extends Lover {
 
     @Override
     public String[][] getPixelsForEmotion(ConsoleArt.Emotion emotion) {
-    Gender attracted = getAttractedTo();
-    boolean useMale = (attracted != null) && (attracted == Gender.Male);
+    Gender gender = getGender();
+    boolean useMale = (gender != null) && (gender == Gender.Male);
     switch (emotion) {
         case NEUTRAL: return useMale ? NEUTRAL_PIXELS_M : NEUTRAL_PIXELS_F;
         case HAPPY: return useMale ? HAPPY_PIXELS_M : HAPPY_PIXELS_F;
