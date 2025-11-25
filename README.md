@@ -1,23 +1,18 @@
 <div align="center">
 
 # 🤖T.A.M.P.O. — The AI Mood-Patching Odyssey  
-**An interactive console-based AI chat game that simulates emotional conversations through personality-driven responses and different personalities.**
-
-
-
 **T.A.M.P.O.** is a Java console game that simulates relationship “tampo” dynamics through conversations with different AI personalities. You create a profile, pick a lover personality, and try to earn forgiveness through "panunuyo". The AI replies in character and appends a tiny JSON object indicating its mood and whether it forgives you, which the game uses to render mood art and determine game end.
 </div>
 
----
 
-## 💭 Highlights
+## 💭 Overview
 
 In **T.A.M.P.O.**, words are your only tool.  
 
-You talk to different AIs that carry different moods, attitudes, and languages. Each a reflection of how they express *tampo.*  It’s not about fixing what’s broken, but about finding the right tone to reach someone who still cares, but just won’t say it out loud.  
+You talk to different AIs that carry different moods, attitudes, and languages. Each a reflection of how they express *tampo.* Your goal is to find the right tone and actions to earn genuine forgiveness from your lover.  
 
 
-**What to expect:**
+**Features:**
 
 🤖 Personality-specific prompts and responses   
 🎮 Explore different conversation paths  
@@ -27,15 +22,73 @@ You talk to different AIs that carry different moods, attitudes, and languages. 
 🏆 Profiles and leaderboard   
 📜 Lightweight history trimming for AI calls   
 ⚙️ Plain JDK, no external libraries required   
+💾 Save and load profiles
 
----
 
-## 3) OOP Concepts Applied
-- Abstraction
+## 📦 OOP Concepts Applied
+### Encapsulation
+  - **User, Message, and GameUtils** - Expose only essential public methods
+  - **All fields** - Private/protected scope to maintain state integrity
+  - **Internal operations** - Hidden from external access   
+
+  Example:   
+  ```java
+  // <Ai.java>
+
+  public class Ai {
+    // Private Variables - hidden internal state
+    private static final String API_KEY = "########################";
+    private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String MODEL = "llama-3.3-70b-versatile";
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+
+    // Public interface - only what consumers need
+    public static ChatResponse chatWithAnalysis(List<Message> history) throws Exception {
+        List<Message> prepared = prepareHistory(history);
+
+        String rawResponse = sendChatRequest(prepared).trim();
+
+        rawResponse = extractContent(rawResponse);
+        return parseChatResponse(rawResponse);
+    }
+
+    // Private method - hidden implementation details
+    private static String sendChatRequest(List<Message> history) throws Exception {
+        String requestBody = String.format("""
+                {
+                    "model": "%s",
+                    "messages": [%s],
+                    "temperature": 0.7,
+                    "max_tokens": 1024
+                }
+                """, MODEL, buildMessagesArray(history));
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + API_KEY)
+                .POST(BodyPublishers.ofString(requestBody))
+                .build();
+
+        HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() != 200) {
+            throw new Exception("API request failed with status: " + response.statusCode() + " - " + response.body());
+        }
+
+        return response.body();
+    }
+  }
+  ```
+  In this example:
+  - External code can only call ai.chatWithAnalysis() - the public method
+  - Internal implementation (sendChatRequest, API details, response parsing) is completely hidden
+  - Sensitive data (API_KEY, URLs, HTTP client) are private and inaccessible
+  - State integrity is maintained - no external code can modify API configuration or bypass validation
+
+### Abstraction
   - Lover (abstract class) defines the common interface/behavior (e.g., getPrompt()) for all personalities.
   - Ai encapsulates all AI HTTP call and parsing details behind chatWithAnalysis(List<Message>).
-- Encapsulation
-  - User, Message, and GameUtils expose minimal public methods; fields are scoped to keep state controlled.
   - Ai hides request construction, JSON parsing, and error handling details from Main.
 - Inheritance
   - Concrete personalities (Tsundere, Kuudere, Deredere, Chuunibyou, Passionate, Timid, YoungStunna) extend Lover and override behavior/prompt.
@@ -107,7 +160,7 @@ Text-based relationships:
 - Main <--> Message (builds conversation history)
 
 
----
+
 
 ## How to Run the Program (Windows, Command Line)
 Prerequisites:
@@ -143,19 +196,19 @@ Notes:
 - If the API key is missing/invalid, AI features will not work.
 - The program trims recent conversation history to reduce tokens.
 
----
+
 
 ## Sample Output
 
 Lagay kayo screenshots dito
 
----
+
 
 ## Authors
 
 <div align="center">
 
-![Majol Abunis](static/majol.png "Majol Abunis")
+![Majol Abunis](static/Majol.png "Majol Abunis")
 
   **CS 2102**  
 **Developed by:**  
@@ -165,7 +218,7 @@ Guial, Ron Emmanuel
 
 </div>
 
----
+
 
 ## Other Sections
 
