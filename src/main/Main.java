@@ -51,14 +51,7 @@ public class Main {
                     viewLeaderboard(input);
                     break;
                 case "4":
-                    System.out.println("=== Tutorial ===");
-                    System.out.println("Make up with the AI lover by chatting with them. Make them say 'I love you' to win.");
-                    System.out.println("Every message you enter gives you a score.");
-                    System.out.println("The lower your score when you win, the better!");
-                    System.out.println("Type 'exit' to quit the game anytime.");
-                    System.out.println("\nPress Enter to return to the menu...");
-                    input.nextLine();
-                    GameUtils.clearConsole();
+                    Tutorial(input);
                     break;
                 case "5":
                     System.out.println("Exiting the game. Goodbye!");
@@ -69,6 +62,33 @@ public class Main {
                     GameUtils.clearConsole();
             }
         }
+    }
+
+    private static void Tutorial(Scanner input){
+        System.out.println("=== Tutorial ===");
+        System.out.println("\u001B[32m" + "Make up with the AI lover by chatting with them.");
+        System.out.println("The AI will provide a random scenario where he/she is upset with you." + "\u001B[0m");
+        System.out.print("\nPress Enter to continue...");
+        input.nextLine();
+        GameUtils.clearConsole();
+
+        currentUser.getLover().displayWithEmotion("You just forgot our anniversary, and now you're trying to make it up to me with some half-hearted excuse, how nice.", Emotion.ANGRY);
+        System.out.println(currentUser.getName() + ": I'm Sorry my love, I promise it won't happen again.\n");
+        System.out.println("\u001B[32m" + "\t\t^^your reply^^");
+        System.out.println("Every reply you enter gives you a score.");
+        System.out.println("Type " + "\u001B[31m" + "'exit'" + "\u001B[32m" + " to quit the game anytime." + "\u001B[0m");
+        System.out.print("\nPress Enter to continue...");
+        input.nextLine();
+        GameUtils.clearConsole();
+
+        currentUser.getLover().displayWithEmotion("I will forgive you this time, but expect that there will be no second chance next time.", Emotion.HAPPY);
+        System.out.println("Congratulations! You've won the lover's heart!");
+        System.out.println("\u001B[38;2;255;215;0m" + "Score: 1");
+        System.out.println("\u001B[32m" + "The fewer reply the better!");
+        System.out.println("That just means you're a great mood patcher!" + "\u001B[0m");
+        System.out.print("\nPress Enter to return to the menu...");
+        input.nextLine();
+        GameUtils.clearConsole();
     }
 
     private static void startGame(Scanner input) {
@@ -103,7 +123,7 @@ public class Main {
             if (ai.forgiven) {
                 GameUtils.saveScore(currentUser.getName(), score);
                 System.out.println("Congratulations! You've won the lover's heart!");
-                System.out.println("Score: " + score);
+                System.out.println("\u001B[38;2;255;215;0m" + "Score: " + score + "\u001B[0m");
                 System.out.println("\nPress Enter to return to the menu...");
                 input.nextLine();
                 GameUtils.clearConsole();
@@ -140,8 +160,8 @@ public class Main {
             System.out.println("1. Create New Profile");
             System.out.println("2. Delete Profile");
             System.out.println("3. Select Profile");
-            System.out.println("\nPress Enter to Main Menu");
-            System.out.print("Enter your choice: ");
+            System.out.println("4. Exit");
+            System.out.print("\nEnter your choice: ");
             String choice = input.nextLine().trim();
             GameUtils.clearConsole();
 
@@ -155,6 +175,8 @@ public class Main {
                 case "3":
                     viewProfiles(input);
                     break;
+                case "4":
+                    return;
                 default:
                     GameUtils.clearConsole();
                     return;        
