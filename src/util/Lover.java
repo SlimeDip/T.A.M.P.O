@@ -1,5 +1,7 @@
 package src.util;
 
+import src.display.ConsoleArt;
+
 public abstract class Lover {
     private String name;
     private Gender gender;
@@ -19,4 +21,6 @@ public abstract class Lover {
     public Language getLanguage() {return language;}
 
     public abstract String getPrompt();
+    public abstract String[][] getPixelsForEmotion(ConsoleArt.Emotion emotion);
+    public abstract void displayWithEmotion(String dialogue, ConsoleArt.Emotion emotion);
 }

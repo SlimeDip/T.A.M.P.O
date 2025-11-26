@@ -1,51 +1,206 @@
 <div align="center">
 
 # 🤖T.A.M.P.O. — The AI Mood-Patching Odyssey  
-**An interactive console-based AI chat game that simulates emotional conversations through personality-driven responses and different personalities.**
-
-*WIP*  
-Game extremely buggy right now. still fixing bugs  
-
+**T.A.M.P.O.** is a Java console game that simulates relationship “tampo” dynamics through conversations with different AI personalities. You create a profile, pick a lover personality, and try to earn forgiveness through "panunuyo". The AI replies in character and appends a tiny JSON object indicating its mood and whether it forgives you, which the game uses to render mood art and determine game end.
 </div>
 
----
 
-<div align="center">
-
-  **CS 2102**  
-**Developed by:**  
-Alvendia, Marjol  
-Borillo, Benedict  
-Guial, Ron Emmanuel  
-
-</div>
-
----
-
-## 💭 Premise
+## 💭 Overview
 
 In **T.A.M.P.O.**, words are your only tool.  
-You talk to different AIs that carry different moods, attitudes, and languages. Each a reflection of how they express *tampo.*  
-It’s not about fixing what’s broken, but about finding the right tone to reach someone who still cares, but just won’t say it out loud.  
+
+You talk to different AIs that carry different moods, attitudes, and languages. Each a reflection of how they express *tampo.* Your goal is to find the right tone and actions to earn genuine forgiveness from your lover.  
 
 
-**Users can:**
+**Features:**
 
-🤖 Interact with a personality-driven AI  
+🤖 Personality-specific prompts and responses   
 🎮 Explore different conversation paths  
 💬 Receive mood-based responses from the AI  
-🛠️ Influence the AI’s mood and responses through choices
+🖌️ Mood-driven console art   
+🛠️ Influence the AI’s mood and responses through choices   
+🏆 Profiles and leaderboard   
+📜 Lightweight history trimming for AI calls   
+⚙️ Plain JDK, no external libraries required   
+💾 Save and load profiles
 
 
----
+## 📦 OOP Concepts Applied
+### Encapsulation
+- **User, Message, and GameUtils** - Expose only essential public methods
+- **All fields** - Private/protected scope to maintain state integrity
+- **Internal operations** - Hidden from external access   
 
-## Project Structure
+Example:   
+```java
+// <Ai.java>
+
+public class Ai {
+  // Private Variables - hidden internal state
+  private static final String API_KEY = "########################";
+  private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
+  private static final String MODEL = "llama-3.3-70b-versatile";
+  private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+
+  // Public interface - only what consumers need
+  public static ChatResponse chatWithAnalysis(List<Message> history) throws Exception {
+      List<Message> prepared = prepareHistory(history);
+
+      String rawResponse = sendChatRequest(prepared).trim();
+
+      rawResponse = extractContent(rawResponse);
+      return parseChatResponse(rawResponse);
+  }
+
+  // Private method - hidden implementation details
+  private static String sendChatRequest(List<Message> history) throws Exception {
+      String requestBody = String.format("""
+              {
+                  "model": "%s",
+                  "messages": [%s],
+                  "temperature": 0.7,
+                  "max_tokens": 1024
+              }
+              """, MODEL, buildMessagesArray(history));
+
+      HttpRequest request = HttpRequest.newBuilder()
+              .uri(URI.create(API_URL))
+              .header("Content-Type", "application/json")
+              .header("Authorization", "Bearer " + API_KEY)
+              .POST(BodyPublishers.ofString(requestBody))
+              .build();
+
+      HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+      if (response.statusCode() != 200) {
+          throw new Exception("API request failed with status: " + response.statusCode() + " - " + response.body());
+      }
+
+      return response.body();
+  }
+}
+```
+In this example:
+- External code can only call ai.chatWithAnalysis() - the public method
+- Internal implementation (sendChatRequest, API details, response parsing) is completely hidden
+- Sensitive data (API_KEY, URLs, HTTP client) are private and inaccessible
+- State integrity is maintained - no external code can modify API configuration or bypass validation
+
+### Abstraction
+- Lover (abstract class) defines the common interface/behavior (e.g., getPrompt()) for all personalities.
+- Personalities (Tsundere, Kuudere, Deredere, Chuunibyou, Passionate, Timid, YoungStunna) extend Lover and override behavior/prompt.
+
+  ```java
+  // Lover.java is an abstract class
+  public abstract class Lover {
+      private String name;
+      private Gender gender;
+      private Gender attractedTo;
+      private Language language;
+
+      public Lover(String name, Gender gender, Gender attractedTo, Language language) {
+          this.name = name;
+          this.gender = gender;
+          this.attractedTo = attractedTo;
+          this.language = language;
+      }
+
+      public String getName() { return name; }
+      public Gender getGender() { return gender; }
+      public Gender getAttractedTo() { return attractedTo; }
+      public Language getLanguage() {return language;}
+
+      public abstract String getPrompt();
+      public abstract String[][] getPixelsForEmotion(ConsoleArt.Emotion emotion);
+      public abstract void displayWithEmotion(String dialogue, ConsoleArt.Emotion emotion);
+  }
+
+  // Example of how lover subclass looks
+  public class Tsundere extends Lover {
+      @Override
+      public String getPrompt() {
+          return String.format(TEMPLATE, getGender(), getAttractedTo(), getLanguage());
+      }
+  }
+  ```
+
+### Inheritance
+- Concrete lover personalities extend the abstract base class `Lover`, reusing common state/behavior and providing specialized implementations for prompts, pixel art, and rendering.
+
+Example (inheritance):
+```java
+// base class
+public abstract class Lover {
+    private String name;
+    private Gender gender;
+    private Gender attractedTo;
+    private Language language;
+
+    public Lover(String name, Gender gender, Gender attractedTo, Language language) {
+        this.name = name;
+        this.gender = gender;
+        this.attractedTo = attractedTo;
+        this.language = language;
+    }
+}
+
+// subclass
+public class Tsundere extends Lover {
+    public Tsundere(String name, Gender gender, Gender attractedTo, Language language) {
+        super(name, gender, attractedTo, language);
+    }
+
+    // name will already be inherited
+    // gender will already be inherited
+    // gender attracted to will be inherited
+    // language will be inherited
+}
+```
+
+### Polymorphism
+- The program treats different Lover subclasses uniformly through the `Lover` type. Main interacts with a `Lover` reference without knowing which concrete subclass is chosen — method calls are dispatched to the correct subclass at runtime.
+
+Example:
+```java
+// Timid subclass
+public class Timid extends Lover {
+    private static final String TEMPLATE = """
+        You take the role of the user's lover.
+        Your personality is timid; you are shy, soft-spoken, and easily flustered.
+        Your gender is %s, and you are attracted to %s.
+        Your language is %s, so speak in that language but still add some english.
+        You're in a bad mood at first. You are nervous and hesitant to speak your feelings directly.
+        Open the conversation with a gentle, awkward scenario where you are upset with the user.
+        The user's objective is to win your genuine forgiveness through a sincere and thoughtful apology. You must not make it easy for them.
+        Keep your responses brief, no more than 2 sentences.
+        """;
+
+// Passionate subclass
+public class Passionate extends Lover {
+    private static final String TEMPLATE = """
+        You take the role of the user's lover.
+        Your personality is passionate; you are passionate, intense, and fiery.
+        Your gender is %s, and you are attracted to %s.
+        Your language is %s, so speak in that language but still add some english.
+        You're in a bad mood at first. Answer curtly and sarcastically.
+        Open the conversation with a short random scenario where you are upset with the user.
+        The user's objective is to win your genuine forgiveness through a sincere and thoughtful apology. You must not make it easy for them.
+        Keep your responses brief, no more than 2 sentences.
+        """;
+```
+In this example:   
+- Both Timid and Passionate inherit from Lover but provide their own unique template strings and behavior implementations.
+
+
+## Program Structure
 
 ```bash
 T.A.M.P.O/
 ├─ .gitignore
 ├─ README.md
 └─ src/
+   ├─ display/
+   │  └─ ConsoleArt.java
    ├─ lover/
    │  ├─ Chuunibyou.java
    │  ├─ Deredere.java
@@ -68,17 +223,102 @@ T.A.M.P.O/
       └─ User.java
 ```
 
----
+### Main Roles:
+- **src.main.Main**
+  - Entry point. Menus (profiles, start game, leaderboard).
+  - Orchestrates user input, builds history, calls Ai.chatWithAnalysis, updates score.
+- **src.main.Ai**
+  - Builds/sends HTTP requests to the Groq Chat Completions API.
+  - Prepares message history (trimming), extracts content and mood JSON, returns ChatResponse.
+- **src.display.ConsoleArt**
+  - Renders mood-based ASCII art depending on the AI’s current emotion.
+- **src.util**
+  - Lover (abstract base for personalities)
+  - User (player profile)
+  - Message (role + text container)
+  - GameUtils (console utilities, save/load profiles and leaderboard)
+  - Gender, Language (enums)
+- **src.lover (personalities)**
+  - Tsundere, Kuudere, Deredere, Chuunibyou, Passionate, Timid, YoungStunna (extend Lover)
 
-## How to Run the Program  
 
-1. **Open your terminal** in the `src/` folder of the project.  
 
-2. **Compile all Java files**:
-```bash
-javac lover/*.java userinterface/*.java *.java
+
+## How to Run the Program (Windows, Command Line)
+Prerequisites:
+- JDK 21+ (tested with JDK 24)
+- Internet connection (for AI replies)
+- A Groq API key
+
+Step-by-step:
+1) Set your Groq API key in the source (no external config used):
+   - Open src\main\Ai.java
+   - Set:
+     - private static final String API_KEY = "YOUR_GROQ_API_KEY";
+
+2) Compile from the project root:
+```powershell
+# Create output folder
+mkdir out 2>$null
+
+# Compile all sources
+javac -encoding UTF-8 -d out ^
+  src\main\*.java ^
+  src\util\*.java ^
+  src\lover\*.java ^
+  src\display\*.java
 ```
-3. Run the program:
-```bash
-java Main
+
+3) Run:
+```powershell
+java -cp out src.main.Main
 ```
+
+Notes:
+- If the API key is missing/invalid, AI features will not work.
+- The program trims recent conversation history to reduce tokens.
+
+
+
+## Sample Output
+
+### Character Creation
+![Character_Creation](static/Character_Creation.png "Character_Creation")
+
+### Gameplay
+![Gameplay](static/Gameplay.png "Gameplay")
+![Gameplay2](static/Gameplay2.png "Gameplay2")
+![Gameplay3](static/Gameplay3.png "Gameplay3")
+![Gameplay4](static/Gameplay4.png "Gameplay4")
+![Gameplay5](static/Gameplay5.png "Gameplay5")
+![Gameplay6](static/Gameplay6.png "Gameplay6")
+
+## Authors
+
+<div align="center">
+
+
+  **CS 2102**  
+**Developed by:**  
+Alvendia, Marjol  
+Borillo, Benedict  
+Guial, Ron Emmanuel  
+
+![Majol Abunis](static/Majol.png "Majol Abunis")
+</div>
+
+
+## Other Sections
+
+### Future Enhancements
+- Token-aware history trimming and retries on network errors
+- Better AI, currently using a free key so performance can be off sometimes
+- Better validation for mood JSON
+- Dynamic difficulty
+
+### References
+- Groq Chat Completions API (OpenAI-compatible endpoint)
+- Java 21+ standard library (java.net.http)
+- Object-Oriented Design patterns (Abstraction, Encapsulation, Inheritance, Polymorphism)
+
+
