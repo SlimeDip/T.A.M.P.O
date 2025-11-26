@@ -11,14 +11,13 @@ In **T.A.M.P.O.**, words are your only tool.
 
 You talk to different AIs that carry different moods, attitudes, and languages. Each a reflection of how they express *tampo.* Your goal is to find the right tone and actions to earn genuine forgiveness from your lover.  
 
-
 **Features:**
 
 🤖 Personality-specific prompts and responses   
-🎮 Explore different conversation paths  
+🎮 Different and endless conversation paths  
 💬 Receive mood-based responses from the AI  
 🖌️ Mood-driven console art   
-🛠️ Influence the AI’s mood and responses through choices   
+🛠️ Ability to influence the AI’s mood and responses through choices   
 🏆 Profiles and leaderboard   
 📜 Lightweight history trimming for AI calls   
 ⚙️ Plain JDK, no external libraries required   
@@ -81,10 +80,10 @@ public class Ai {
 }
 ```
 In this example:
-- External code can only call `ai.chatWithAnalysis()` - the public method
-- Internal implementation (sendChatRequest, API details, response parsing) is completely hidden
-- Sensitive data (API_KEY, URLs, HTTP client) are private and inaccessible
-- State integrity is maintained - no external code can modify API configuration or bypass validation
+- External code can only call `ai.chatWithAnalysis()` which is the public method
+- Internal implementation like sendChatRequest, API details, response parsing is completely hidden
+- Sensitive data like API_KEY, URLs, HTTP client are private and inaccessible
+- State integrity is maintained, no external code can modify API configuration or bypass validation
 
 ### Abstraction
 - Lover (abstract class) defines the common interface/behavior (e.g., getPrompt()) for all personalities.
@@ -158,7 +157,7 @@ public class Tsundere extends Lover {
 ```
 
 ### Polymorphism
-- The program treats different Lover subclasses uniformly through the `Lover` type. Main interacts with a `Lover` reference without knowing which concrete subclass is chosen — method calls are dispatched to the correct subclass at runtime.
+- The program treats different Lover subclasses uniformly through the `Lover` type. Main interacts with a `Lover` reference without knowing which concrete subclass is chosen.
 
 Example:
 ```java
@@ -198,6 +197,7 @@ In this example:
 T.A.M.P.O/
 ├─ .gitignore
 ├─ README.md
+├─ static/
 └─ src/
    ├─ display/
    │  └─ ConsoleArt.java
@@ -341,6 +341,6 @@ Salamat sa mga sumuporta sa OOP final project na to. Lalo na kay Carl na walang 
 - Dynamic difficulty
 
 ### References
-- Groq Chat Completions API (OpenAI-compatible endpoint)
-- Java 21+ standard library (java.net.http)
+- Groq Chat Completions API
+- Java 21+ standard library
 - Object-Oriented Design patterns (Abstraction, Encapsulation, Inheritance, Polymorphism)
