@@ -290,6 +290,8 @@ Notes:
 ![Gameplay2](static/Gameplay2.png "Gameplay2")
 ![Gameplay3](static/Gameplay3.png "Gameplay3")
 ![Gameplay4](static/Gameplay4.png "Gameplay4")
+![Gameplay5](static/Gameplay5.png "Gameplay5")
+![Gameplay6](static/Gameplay6.png "Gameplay6")
 
 ## Authors
 
