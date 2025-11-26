@@ -317,7 +317,7 @@ Notes:
       </a>
     </td>
     <td align="center" width="180">
-      <img src="static/Ron.png" alt="Ron" width="120"/><br/>
+      <img src="static/Ron.PNG" alt="Ron" width="120"/><br/>
       <strong>Ron Emmanuel Guial</strong><br/>
       Art & UX<br/>
       <a href="https://github.com/Maca-roni" target="_blank">
