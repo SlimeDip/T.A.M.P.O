@@ -81,7 +81,7 @@ public class Ai {
 }
 ```
 In this example:
-- External code can only call ai.chatWithAnalysis() - the public method
+- External code can only call `ai.chatWithAnalysis()` - the public method
 - Internal implementation (sendChatRequest, API details, response parsing) is completely hidden
 - Sensitive data (API_KEY, URLs, HTTP client) are private and inaccessible
 - State integrity is maintained - no external code can modify API configuration or bypass validation
