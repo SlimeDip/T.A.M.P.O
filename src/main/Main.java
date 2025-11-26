@@ -92,66 +92,66 @@ public class Main {
     }
 
     private static void startGame(Scanner input) {
-    int score = 0;
+        int score = 0;
 
-    try {
-        String prompt = currentUser.getLover().getPrompt();
-        List<Message> history = new ArrayList<>();
-        List<String> conversationHistory = new ArrayList<>(); 
-        history.add(new Message("system", prompt));
+        try {
+            String prompt = currentUser.getLover().getPrompt();
+            List<Message> history = new ArrayList<>();
+            List<String> conversationHistory = new ArrayList<>(); 
+            history.add(new Message("system", prompt));
 
-        while (true) {
-            GameUtils.clearConsole();
-            
-            // Print conversation history
-            for (String line : conversationHistory) {
-                System.out.println(line);
-            }
-            System.out.println("=" .repeat(50)); 
-            
-            Ai.ChatResponse ai = Ai.chatWithAnalysis(history);
-            String response = ai.content;
-            Emotion emotion = ai.mood;
-
-            // Display lover with emotion and art
-            currentUser.getLover().displayWithEmotion(response, emotion);
-            
-            // Add to conversation history
-            conversationHistory.add(currentUser.getLover().getName() + ": " + response);
-            history.add(new Message("assistant", response));
-
-            if (ai.forgiven) {
-                GameUtils.saveScore(currentUser.getName(), score);
-                System.out.println("\nCongratulations! You've won the lover's heart!");
-                System.out.println("\u001B[38;2;255;215;0m" + "Score: " + score + "\u001B[0m");
-                System.out.println("\nPress Enter to return to the menu...");
-                input.nextLine();
+            while (true) {
                 GameUtils.clearConsole();
-                return;
-            }
+                
+                // Print conversation history
+                for (String line : conversationHistory) {
+                    System.out.println(line);
+                }
+                System.out.println("=" .repeat(50)); 
+                
+                Ai.ChatResponse ai = Ai.chatWithAnalysis(history);
+                String response = ai.content;
+                Emotion emotion = ai.mood;
 
-            System.out.print("\n" + currentUser.getName() + ": ");
-            String userMessage = input.nextLine();
-            userMessage = userMessage.trim();
-            score++;
+                // Display lover with emotion and art
+                currentUser.getLover().displayWithEmotion(response, emotion);
+                
+                // Add to conversation history
+                conversationHistory.add(currentUser.getLover().getName() + ": " + response);
+                history.add(new Message("assistant", response));
 
-            if (userMessage.equalsIgnoreCase("exit")) {
-                GameUtils.clearConsole();
-                break;
-            }
+                if (ai.forgiven) {
+                    GameUtils.saveScore(currentUser.getName(), score);
+                    System.out.println("\nCongratulations! You've won the lover's heart!");
+                    System.out.println("\u001B[38;2;255;215;0m" + "Score: " + score + "\u001B[0m");
+                    System.out.println("\nPress Enter to return to the menu...");
+                    input.nextLine();
+                    GameUtils.clearConsole();
+                    return;
+                }
 
-            if (userMessage.isEmpty()) {
-                history.add(new Message("user", "..."));
-                conversationHistory.add(currentUser.getName() + ": ...");
-            } else {
-                history.add(new Message("user", userMessage));
-                conversationHistory.add(currentUser.getName() + ": " + userMessage);
+                System.out.print("\n" + currentUser.getName() + ": ");
+                String userMessage = input.nextLine();
+                userMessage = userMessage.trim();
+                score++;
+
+                if (userMessage.equalsIgnoreCase("exit")) {
+                    GameUtils.clearConsole();
+                    break;
+                }
+
+                if (userMessage.isEmpty()) {
+                    history.add(new Message("user", "..."));
+                    conversationHistory.add(currentUser.getName() + ": ...");
+                } else {
+                    history.add(new Message("user", userMessage));
+                    conversationHistory.add(currentUser.getName() + ": " + userMessage);
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
         }
-    } catch (Exception e) {
-        System.out.println("Error: " + e.getMessage());
     }
-}
 
     private static void profileSettings(Scanner input) {
         while (true) {
