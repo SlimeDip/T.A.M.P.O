@@ -103,7 +103,6 @@ public class Main {
             while (true) {
                 GameUtils.clearConsole();
                 
-                // Print conversation history
                 for (String line : conversationHistory) {
                     System.out.println(line);
                 }
@@ -113,10 +112,8 @@ public class Main {
                 String response = ai.content;
                 Emotion emotion = ai.mood;
 
-                // Display lover with emotion and art
                 currentUser.getLover().displayWithEmotion(response, emotion);
                 
-                // Add to conversation history
                 conversationHistory.add(currentUser.getLover().getName() + ": " + response);
                 history.add(new Message("assistant", response));
 
