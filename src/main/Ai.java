@@ -95,7 +95,7 @@ public class Ai {
                 {
                     "model": "%s",
                     "messages": [%s],
-                    "temperature": 0.7,
+                    "temperature": 0.4,
                     "max_tokens": 1024
                 }
                 """, MODEL, buildMessagesArray(history));
