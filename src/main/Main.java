@@ -211,15 +211,25 @@ public class Main {
         System.out.println("=== Delete Profile ===");
         int num = 1;
         for (User user : profiles) {
+            if (num % 2 == 0) {
+                System.out.print("\u001b[38;5;229m");
+            } else {
+                System.out.print("\u001B[0m");
+            }
             System.out.println(num + ". " + user.getName());
             num++;
         }
-        System.out.println("Press 0 to Cancel");
+
+        System.out.print("\u001B[0m");
+        System.out.println("\nType exit to cancel deletion.");
 
         System.out.print("Select profile to delete: ");
-        int profileIndex = input.nextInt() - 1;
-        input.nextLine();
-
+        String inputStr = input.nextLine().trim();
+        if (inputStr.equalsIgnoreCase("exit")) {
+            GameUtils.clearConsole();
+            return;
+        }
+        int profileIndex = Integer.parseInt(inputStr) - 1;
         if (profileIndex == -1) {
             GameUtils.clearConsole();
             return;
@@ -365,12 +375,18 @@ public class Main {
     private static void viewProfiles(Scanner input) {
         int num = 1;
         for (User user : profiles) {
+            if (num % 2 == 0) {
+                System.out.print("\u001b[38;5;229m");
+            } else {
+                System.out.print("\u001B[0m");
+            }
             System.out.print(num + ". User: " + user.getName());
             Lover lover = user.getLover();
             System.out.println(" | Lover: " + lover.getName() + " (" + lover.getClass().getSimpleName() + ") | Language: " + lover.getLanguage());
             num++;
         }
 
+        System.out.print("\u001B[0m");
         System.out.print("\nSelect profile to use: ");
         int profileIndex = input.nextInt() - 1;
         input.nextLine();

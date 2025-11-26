@@ -36,48 +36,48 @@ Example:
 // <Ai.java>
 
 public class Ai {
-  // Private Variables - hidden internal state
-  private static final String API_KEY = "########################";
-  private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
-  private static final String MODEL = "llama-3.3-70b-versatile";
-  private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    // Private Variables - hidden internal state
+    private static final String API_KEY = "########################";
+    private static final String API_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String MODEL = "llama-3.3-70b-versatile";
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
-  // Public interface - only what consumers need
-  public static ChatResponse chatWithAnalysis(List<Message> history) throws Exception {
-      List<Message> prepared = prepareHistory(history);
+    // Public method - only what consumers need
+    public static ChatResponse chatWithAnalysis(List<Message> history) throws Exception {
+        List<Message> prepared = prepareHistory(history);
 
-      String rawResponse = sendChatRequest(prepared).trim();
+        String rawResponse = sendChatRequest(prepared).trim();
 
-      rawResponse = extractContent(rawResponse);
-      return parseChatResponse(rawResponse);
-  }
+        rawResponse = extractContent(rawResponse);
+        return parseChatResponse(rawResponse);
+    }
 
-  // Private method - hidden implementation details
-  private static String sendChatRequest(List<Message> history) throws Exception {
-      String requestBody = String.format("""
-              {
-                  "model": "%s",
-                  "messages": [%s],
-                  "temperature": 0.7,
-                  "max_tokens": 1024
-              }
-              """, MODEL, buildMessagesArray(history));
+    // Private method - hidden implementation details
+    private static String sendChatRequest(List<Message> history) throws Exception {
+        String requestBody = String.format("""
+                {
+                    "model": "%s",
+                    "messages": [%s],
+                    "temperature": 0.7,
+                    "max_tokens": 1024
+                }
+                """, MODEL, buildMessagesArray(history));
 
-      HttpRequest request = HttpRequest.newBuilder()
-              .uri(URI.create(API_URL))
-              .header("Content-Type", "application/json")
-              .header("Authorization", "Bearer " + API_KEY)
-              .POST(BodyPublishers.ofString(requestBody))
-              .build();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL))
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + API_KEY)
+                .POST(BodyPublishers.ofString(requestBody))
+                .build();
 
-      HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
-      if (response.statusCode() != 200) {
-          throw new Exception("API request failed with status: " + response.statusCode() + " - " + response.body());
-      }
+        if (response.statusCode() != 200) {
+            throw new Exception("API request failed with status: " + response.statusCode() + " - " + response.body());
+        }
 
-      return response.body();
-  }
+        return response.body();
+    }
 }
 ```
 In this example:
@@ -90,39 +90,39 @@ In this example:
 - Lover (abstract class) defines the common interface/behavior (e.g., getPrompt()) for all personalities.
 - Personalities (Tsundere, Kuudere, Deredere, Chuunibyou, Passionate, Timid, YoungStunna) extend Lover and override behavior/prompt.
 
-  ```java
-  // Lover.java is an abstract class
-  public abstract class Lover {
-      private String name;
-      private Gender gender;
-      private Gender attractedTo;
-      private Language language;
+```java
+// Lover.java is an abstract class
+public abstract class Lover {
+    private String name;
+    private Gender gender;
+    private Gender attractedTo;
+    private Language language;
 
-      public Lover(String name, Gender gender, Gender attractedTo, Language language) {
-          this.name = name;
-          this.gender = gender;
-          this.attractedTo = attractedTo;
-          this.language = language;
-      }
+    public Lover(String name, Gender gender, Gender attractedTo, Language language) {
+        this.name = name;
+        this.gender = gender;
+        this.attractedTo = attractedTo;
+        this.language = language;
+    }
 
-      public String getName() { return name; }
-      public Gender getGender() { return gender; }
-      public Gender getAttractedTo() { return attractedTo; }
-      public Language getLanguage() {return language;}
+    public String getName() { return name; }
+    public Gender getGender() { return gender; }
+    public Gender getAttractedTo() { return attractedTo; }
+    public Language getLanguage() {return language;}
 
-      public abstract String getPrompt();
-      public abstract String[][] getPixelsForEmotion(ConsoleArt.Emotion emotion);
-      public abstract void displayWithEmotion(String dialogue, ConsoleArt.Emotion emotion);
-  }
+    public abstract String getPrompt();
+    public abstract String[][] getPixelsForEmotion(ConsoleArt.Emotion emotion);
+    public abstract void displayWithEmotion(String dialogue, ConsoleArt.Emotion emotion);
+}
 
-  // Example of how lover subclass looks
-  public class Tsundere extends Lover {
-      @Override
-      public String getPrompt() {
-          return String.format(TEMPLATE, getGender(), getAttractedTo(), getLanguage());
-      }
-  }
-  ```
+// Example of how lover subclass looks
+public class Tsundere extends Lover {
+    @Override
+    public String getPrompt() {
+        return String.format(TEMPLATE, getGender(), getAttractedTo(), getLanguage());
+    }
+}
+```
 
 ### Inheritance
 - Concrete lover personalities extend the abstract base class `Lover`, reusing common state/behavior and providing specialized implementations for prompts, pixel art, and rendering.
@@ -192,7 +192,7 @@ In this example:
 - Both Timid and Passionate inherit from Lover but provide their own unique template strings and behavior implementations.
 
 
-## Program Structure
+## 🛠️ Program Structure
 
 ```bash
 T.A.M.P.O/
@@ -244,7 +244,7 @@ T.A.M.P.O/
 
 
 
-## How to Run the Program (Windows, Command Line)
+## 🖥️ How to Run the Program (Windows, Command Line)
 Prerequisites:
 - JDK 21+ (tested with JDK 24)
 - Internet connection (for AI replies)
@@ -280,7 +280,7 @@ Notes:
 
 
 
-## Sample Output
+## 👾 Sample Output
 
 ### Character Creation
 ![Character_Creation](static/Character_Creation.png "Character_Creation")
@@ -293,25 +293,49 @@ Notes:
 ![Gameplay5](static/Gameplay5.png "Gameplay5")
 ![Gameplay6](static/Gameplay6.png "Gameplay6")
 
-## Authors
+
+## ✨ Authors & Credits
 
 <div align="center">
 
+<table>
+  <tr>
+    <td align="center" width="180">
+      <img src="static/Majol.png" alt="Majol" width="120"/><br/>
+      <strong>Marjol Alvendia</strong><br/>
+      Debugging & Gameplay<br/>
+      <a href="https://github.com/ShinHank" target="_blank">
+        <img src="https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
+      </a>
+    </td>
+    <td align="center" width="180">
+      <img src="static/Dip.png" alt="Benedict" width="120"/><br/>
+      <strong>Benedict Borillo</strong><br/>
+      AI Integration<br/>
+      <a href="https://github.com/SlimeDip" target="_blank">
+        <img src="https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
+      </a>
+    </td>
+    <td align="center" width="180">
+      <img src="static/Ron.png" alt="Ron" width="120"/><br/>
+      <strong>Ron Emmanuel Guial</strong><br/>
+      Art & UX<br/>
+      <a href="https://github.com/Maca-roni" target="_blank">
+        <img src="https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
+      </a>
+    </td>
+  </tr>
+</table>
 
-  **CS 2102**  
-**Developed by:**  
-Alvendia, Marjol  
-Borillo, Benedict  
-Guial, Ron Emmanuel  
+<p style="margin-top:12px; max-width:720px; text-align:center;">
+Salamat sa mga sumuporta sa OOP final project na to. Lalo na kay Carl na walang sawang nag beta test dito.
+</p>
 
-![Majol Abunis](static/Majol.png "Majol Abunis")
 </div>
 
-
-## Other Sections
+## ✍️ Other Sections
 
 ### Future Enhancements
-- Token-aware history trimming and retries on network errors
 - Better AI, currently using a free key so performance can be off sometimes
 - Better validation for mood JSON
 - Dynamic difficulty
@@ -320,5 +344,3 @@ Guial, Ron Emmanuel
 - Groq Chat Completions API (OpenAI-compatible endpoint)
 - Java 21+ standard library (java.net.http)
 - Object-Oriented Design patterns (Abstraction, Encapsulation, Inheritance, Polymorphism)
-
-
