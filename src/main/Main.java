@@ -122,7 +122,7 @@ public class Main {
 
             if (ai.forgiven) {
                 GameUtils.saveScore(currentUser.getName(), score);
-                System.out.println("Congratulations! You've won the lover's heart!");
+                System.out.println("\nCongratulations! You've won the lover's heart!");
                 System.out.println("\u001B[38;2;255;215;0m" + "Score: " + score + "\u001B[0m");
                 System.out.println("\nPress Enter to return to the menu...");
                 input.nextLine();
