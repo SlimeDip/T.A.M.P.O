@@ -309,7 +309,7 @@ Notes:
       </a>
     </td>
     <td align="center" width="180">
-      <img src="static/Dip.png" alt="Benedict" width="120"/><br/>
+      <img src="static/Dip.PNG" alt="Benedict" width="120"/><br/>
       <strong>Benedict Borillo</strong><br/>
       AI Integration<br/>
       <a href="https://github.com/SlimeDip" target="_blank">
