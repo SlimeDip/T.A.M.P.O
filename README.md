@@ -248,7 +248,7 @@ T.A.M.P.O/
 Prerequisites:
 - JDK 21+ (tested with JDK 24)
 - Internet connection (for AI replies)
-- A Groq API key
+- A Groq API key (get one for free at [Groq API](https://groq.com/))
 
 Step-by-step:
 1) Set your Groq API key in the source (no external config used):
