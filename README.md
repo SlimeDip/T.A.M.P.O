@@ -329,7 +329,7 @@ Notes:
 </table>
 
 <p style="margin-top:12px; max-width:720px; text-align:center;">
-Salamat sa mga sumuporta sa OOP final project na to. Lalo na kay Carl na walang sawang nag beta test dito.
+Salamat sa aming prof, sa diyos, at sa mga taong sumuporta sa OOP final project na to. And lalo na kay Carl na walang sawang nag beta test dito.
 </p>
 
 </div>
