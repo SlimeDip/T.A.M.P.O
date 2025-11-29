@@ -320,7 +320,7 @@ Notes:
     <td align="center" width="180">
       <img src="static/Ron.PNG" alt="Ron" width="120"/><br/>
       <strong>Ron Emmanuel Guial</strong><br/>
-      Art & UX<br/>
+      Art & UI<br/>
       <a href="https://github.com/Maca-roni" target="_blank">
         <img src="https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
       </a>
