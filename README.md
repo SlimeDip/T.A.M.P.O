@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🤖T.A.M.P.O. — The AI Mood-Patching Odyssey  
+<img src="static/Tampo Title.gif" width="100%">
+
+<h1 align="center">🤖 T.A.M.P.O. — The AI Mood-Patching Odyssey</h1> 
 **T.A.M.P.O.** is a Java console game that simulates relationship “tampo” dynamics through conversations with different AI personalities. You create a profile, pick a lover personality, and try to earn forgiveness through "panunuyo". The AI replies in character and appends a tiny JSON object indicating its mood and whether it forgives you, which the game uses to render mood art and determine game end.
 </div>
 
