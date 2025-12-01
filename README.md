@@ -330,9 +330,23 @@ Notes:
   </tr>
 </table>
 
-<p style="margin-top:12px; max-width:720px; text-align:center;">
-Salamat sa aming prof, sa diyos, at sa mga taong sumuporta sa OOP final project na to. And lalo na kay Carl na walang sawang nag beta test dito.
-</p>
+<div align="center">
+
+✨ Salamat sa aming prof, <strong>Ma'am Fatima</strong> ✨  
+sa Diyos, at sa lahat ng sumuporta sa OOP final project na ito.  
+Lalo na kay Carl na walang sawang nag-beta test dito. 💛
+
+<br>
+
+<a href="https://github.com/marieemoiselle" target="_blank">
+  <img src="https://img.shields.io/badge/Prof_Marie's_GitHub-ff69b4?style=for-the-badge&logo=github&logoColor=white&labelColor=8b008b" alt="Prof Marie GitHub"/>
+</a>
+
+<br><br>
+
+🖤 Support our professor by checking out her GitHub! 🖤  
+
+</div>
 
 </div>
 
@@ -347,3 +361,20 @@ Salamat sa aming prof, sa diyos, at sa mga taong sumuporta sa OOP final project 
 - Groq Chat Completions API
 - Java 21+ standard library
 - Object-Oriented Design patterns (Abstraction, Encapsulation, Inheritance, Polymorphism)
+
+
+
+
+<div align="center">
+
+## 💖 Thank You for Reading!
+
+Maraming salamat for checking out **T.A.M.P.O. — The AI Mood-Patching Odyssey**.  
+We hope you enjoyed how it feels to talk to someone na nagtatampo. 
+Your support means a lot and motivates us to keep improving this project. 💛
+
+<br/>
+
+<img src="static/ThankYou.gif" width="25%" alt="Thank You GIF"/>
+
+</div>
