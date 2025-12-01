@@ -13,22 +13,23 @@ You talk to different AIs that carry different moods, attitudes, and languages. 
 
 **Features:**
 
-🤖 Personality-specific prompts and responses   
-🎮 Different and endless conversation paths  
-💬 Receive mood-based responses from the AI  
-🖌️ Mood-driven console art   
-🛠️ Ability to influence the AI’s mood and responses through choices   
-🏆 Profiles and leaderboard   
-📜 Lightweight history trimming for AI calls   
-⚙️ Plain JDK, no external libraries required   
-💾 Save and load profiles
+- 🤖 Personality-specific prompts and responses
+- 🎮 Endless conversation paths
+- 💬 Mood-based AI responses
+- 🖌️ Mood-driven console art
+- 🛠️ Influence the AI’s mood and responses through choices
+- 🏆 Profiles and leaderboard
+- 📜 Lightweight history trimming for AI calls
+- ⚙️ Plain JDK, no external libraries required
+- 💾 Save and load profiles
 
+---
 
 ## 📦 OOP Concepts Applied
 ### Encapsulation
-- **User, Message, and GameUtils** - Expose only essential public methods
-- **All fields** - Private/protected scope to maintain state integrity
-- **Internal operations** - Hidden from external access   
+- **User, Message, and GameUtils** expose only essential public methods.
+- All fields are private/protected to maintain state integrity.
+- Internal operations (like API calls) are hidden from external access.
 
 Example:   
 ```java
@@ -86,8 +87,8 @@ In this example:
 - State integrity is maintained, no external code can modify API configuration or bypass validation
 
 ### Abstraction
-- Lover (abstract class) defines the common interface/behavior (e.g., getPrompt()) for all personalities.
-- Personalities (Tsundere, Kuudere, Deredere, Chuunibyou, Passionate, Timid, YoungStunna) extend Lover and override behavior/prompt.
+- `Lover` (abstract class) defines the common interface/behavior (e.g., `getPrompt()`) for all personalities.
+- Personalities (`Tsundere`, `Kuudere`, `Deredere`, `Chuunibyou`, `Passionate`, `Timid`, `YoungStunna`) extend `Lover` and override behavior/prompt.
 
 ```java
 // Lover.java is an abstract class
@@ -149,8 +150,8 @@ public class Tsundere extends Lover {
         super(name, gender, attractedTo, language);
     }
 
-    // name will already be inherited
-    // gender will already be inherited
+    // name will be inherited
+    // gender will be inherited
     // gender attracted to will be inherited
     // language will be inherited
 }
@@ -248,7 +249,7 @@ T.A.M.P.O/
 Prerequisites:
 - JDK 21+ (tested with JDK 24)
 - Internet connection (for AI replies)
-- A Groq API key
+- A Groq API key (get one for free at [Groq API](https://groq.com/))
 
 Step-by-step:
 1) Set your Groq API key in the source (no external config used):
@@ -317,9 +318,9 @@ Notes:
       </a>
     </td>
     <td align="center" width="180">
-      <img src="static/Ron.png" alt="Ron" width="120"/><br/>
+      <img src="static/Ron.PNG" alt="Ron" width="120"/><br/>
       <strong>Ron Emmanuel Guial</strong><br/>
-      Art & UX<br/>
+      Art & UI<br/>
       <a href="https://github.com/Maca-roni" target="_blank">
         <img src="https://img.shields.io/badge/GitHub-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
       </a>
@@ -328,7 +329,7 @@ Notes:
 </table>
 
 <p style="margin-top:12px; max-width:720px; text-align:center;">
-Salamat sa mga sumuporta sa OOP final project na to. Lalo na kay Carl na walang sawang nag beta test dito.
+Salamat sa aming prof, sa diyos, at sa mga taong sumuporta sa OOP final project na to. And lalo na kay Carl na walang sawang nag beta test dito.
 </p>
 
 </div>
