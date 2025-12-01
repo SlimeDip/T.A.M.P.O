@@ -339,7 +339,7 @@ Lalo na kay Carl na walang sawang nag-beta test dito. 💛
 <br>
 
 <a href="https://github.com/marieemoiselle" target="_blank">
-  <img src="https://img.shields.io/badge/Prof_Marie's_GitHub-ff69b4?style=for-the-badge&logo=github&logoColor=white&labelColor=8b008b" alt="Prof Marie GitHub"/>
+  <img src="https://img.shields.io/badge/Maam_Fatima's_GitHub-ff69b4?style=for-the-badge&logo=github&logoColor=white&labelColor=8b008b" alt="Maam Fatima's GitHub"/>
 </a>
 
 <br><br>
