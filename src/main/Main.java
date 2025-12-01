@@ -28,7 +28,7 @@ public class Main {
 
     private static void menu(Scanner input) {
         while (true) { 
-            System.out.println("=== Suyo Simulator ===");
+            System.out.println("=== T.A.M.P.O. ===");
             System.out.println("Current Profile: " + currentUser.getName());
             System.out.println("1. Start game");
             System.out.println("2. Profile Settings");
