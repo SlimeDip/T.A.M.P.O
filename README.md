@@ -24,6 +24,7 @@ You talk to different AIs that carry different moods, attitudes, and languages. 
 - 📜 Lightweight history trimming for AI calls
 - ⚙️ Plain JDK, no external libraries required
 - 💾 Save and load profiles
+- 🖼️ 70 unique pixel arts
 
 ---
 
