@@ -28,7 +28,7 @@ You talk to different AIs that carry different moods, attitudes, and languages. 
 ---
 
 ## 📦 OOP Concepts Applied
-### Encapsulation
+### 💊 Encapsulation
 - **User, Message, and GameUtils** expose only essential public methods.
 - All fields are private/protected to maintain state integrity.
 - Internal operations (like API calls) are hidden from external access.
@@ -88,7 +88,7 @@ In this example:
 - Sensitive data like API_KEY, URLs, HTTP client are private and inaccessible
 - State integrity is maintained, no external code can modify API configuration or bypass validation
 
-### Abstraction
+### 💖 Abstraction
 - `Lover` (abstract class) defines the common interface/behavior (e.g., `getPrompt()`) for all personalities.
 - Personalities (`Tsundere`, `Kuudere`, `Deredere`, `Chuunibyou`, `Passionate`, `Timid`, `YoungStunna`) extend `Lover` and override behavior/prompt.
 
@@ -126,7 +126,7 @@ public class Tsundere extends Lover {
 }
 ```
 
-### Inheritance
+### 🔗 Inheritance
 - Concrete lover personalities extend the abstract base class `Lover`, reusing common state/behavior and providing specialized implementations for prompts, pixel art, and rendering.
 
 Example (inheritance):
@@ -159,7 +159,7 @@ public class Tsundere extends Lover {
 }
 ```
 
-### Polymorphism
+### ✨ Polymorphism
 - The program treats different Lover subclasses uniformly through the `Lover` type. Main interacts with a `Lover` reference without knowing which concrete subclass is chosen.
 
 Example:
