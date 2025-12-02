@@ -245,6 +245,7 @@ T.A.M.P.O/
   - Tsundere, Kuudere, Deredere, Chuunibyou, Passionate, Timid, YoungStunna (extend Lover)
 
 
+<img src="static/Tampo Banner.png" width="100%">
 
 
 ## 🖥️ How to Run the Program (Windows, Command Line)
