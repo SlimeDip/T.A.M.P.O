@@ -332,7 +332,7 @@ Notes:
 
 <div align="center">
 
-✨ Salamat sa aming prof, <strong>Ma'am Fatima</strong> ✨  
+✨ Salamat sa aming prof, <strong>Ma'am Fatima Marie Agdon,</strong> ✨  
 sa Diyos, at sa lahat ng sumuporta sa OOP final project na ito.  
 Lalo na kay Carl na walang sawang nag-beta test dito. 💛
 
