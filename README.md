@@ -243,7 +243,7 @@ T.A.M.P.O/
   - GameUtils (console utilities, save/load profiles and leaderboard)
   - Gender, Language (enums)
 - **src.lover (personalities)**
-  - Tsundere, Kuudere, Deredere, Chuunibyou, Passionate, Timid, YoungStunna (extend Lover)
+  - Passionate, Chuunibyou, Deredere, Tsundere, YoungStunna, Kuudere, Timid (extend Lover)
 
 
 <img src="static/Tampo Banner.png" width="100%">
