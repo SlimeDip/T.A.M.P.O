@@ -88,7 +88,7 @@ public class Ai {
 
     private static String sendChatRequest(List<Message> history) throws Exception {
         if (API_KEY.isEmpty()) {
-            throw new Exception("Game wont work without API key. We kept it hidden for now so stay tuned!\n\n");
+            throw new Exception("Game wont work without API key. Check our README.md for instructions on how to set it up.\n\n");
         }
 
         String requestBody = String.format("""
